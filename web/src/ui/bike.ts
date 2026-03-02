@@ -1,5 +1,10 @@
-function addBikeToGarage(): void {
-  // add bike
+function addBikeToGarage(
+  name: string,
+  year: number,
+  model: string,
+  odo: number,
+) {
+  console.log(name);
 }
 
 function editBike(): void {

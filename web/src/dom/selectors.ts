@@ -29,8 +29,16 @@ export const dom = {
   registerScreen: document.querySelector('[data-testid="screen-register"]'),
   garageScreen: document.querySelector('[data-testid="screen-garage"]'),
   bikeScreen: document.querySelector('[data-testid="screen-bike"]'),
+  addBikeScreen: document.querySelector('[data-testid="screen-bike-add"]'),
 
   // bikes grid
   bikeGrid: document.querySelector('[data-testid="garage-grid"]'),
   noBikesYetGrid: document.querySelector('[data-testid="garage-empty"]'),
+
+  // add bike form
+  addBikeForm: document.querySelector('[data-testid="add-bike-form"]'),
+  make: document.querySelector('#addBikeName'),
+  model: document.querySelector('#addBikeModel'),
+  year: document.querySelector('#addBikeYear'),
+  odo: document.querySelector('#addBikeOdo'),
 };

@@ -21,8 +21,14 @@ function renderGarageScreen(): void {
   dom.nav?.classList.remove('is-hidden');
   dom.garageScreen?.classList.remove('is-hidden');
   dom.bikeScreen?.classList.add('is-hidden');
+  dom.addBikeScreen?.classList.add('is-hidden');
 
   dom.userEmail!.innerHTML = `Hello, Petro!`;
+}
+
+function renderAddBikeScreen(): void {
+  dom.addBikeScreen?.classList.remove('is-hidden');
+  dom.garageScreen?.classList.add('is-hidden');
 }
 
 function renderBikeScreen(): void {
@@ -35,4 +41,5 @@ export {
   renderGarageScreen,
   renderRegisterScreen,
   renderBikeScreen,
+  renderAddBikeScreen,
 };
