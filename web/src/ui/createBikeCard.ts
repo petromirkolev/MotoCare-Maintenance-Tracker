@@ -1,10 +1,4 @@
-type Bike = {
-  id: number;
-  name: string;
-  year: number;
-  model: string;
-  odometerKm: number;
-};
+import type { Bike } from '../state/bikeStore';
 
 export function createBikeCard(bike: Bike): HTMLElement {
   const id = String(bike.id);
@@ -50,9 +44,9 @@ export function createBikeCard(bike: Bike): HTMLElement {
     throw new Error('Bike card template missing expected elements');
   }
 
-  nameEl.textContent = bike.name;
-  metaEl.textContent = `${bike.year} ${bike.name} ${bike.model}`;
-  odoEl.textContent = String(bike.odometerKm);
+  nameEl.textContent = bike.make;
+  metaEl.textContent = `${bike.year} ${bike.make} ${bike.model}`;
+  odoEl.textContent = String(bike.odo);
 
   return article;
 }

@@ -1,4 +1,7 @@
-import { dom } from './selectors.ts';
+import { dom } from './selectors';
+import { bikeStore } from '../state/bikeStore';
+import { createBikeCard } from '../ui/createBikeCard';
+import { showScreen } from '../ui/showScreen';
 
 function renderInitialScreen(): void {
   dom.loginScreen?.classList.remove('is-hidden');
@@ -17,13 +20,28 @@ function renderRegisterScreen(): void {
 }
 
 function renderGarageScreen(): void {
-  dom.loginScreen?.classList.add('is-hidden');
-  dom.nav?.classList.remove('is-hidden');
-  dom.garageScreen?.classList.remove('is-hidden');
-  dom.bikeScreen?.classList.add('is-hidden');
-  dom.addBikeScreen?.classList.add('is-hidden');
+  (dom.bikeGrid as HTMLDivElement).innerHTML = '';
+
+  showScreen('garage');
 
   dom.userEmail!.innerHTML = `Hello, Petro!`;
+
+  const bikes = bikeStore.getBikes();
+
+  if (bikes.length > 0) {
+    (
+      document.querySelector('[data-testid="garage-count"]') as HTMLElement
+    ).textContent = `${bikes.length} motorcycles`;
+    document
+      .querySelector('[data-testid="garage-empty"]')
+      ?.classList.remove('is-hidden');
+
+    bikes.forEach((bike) => dom.bikeGrid?.appendChild(createBikeCard(bike)));
+  } else {
+    document
+      .querySelector('[data-testid="garage-empty"]')
+      ?.classList.add('is-hidden');
+  }
 }
 
 function renderAddBikeScreen(): void {

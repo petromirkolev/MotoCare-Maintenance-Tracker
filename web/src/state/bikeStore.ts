@@ -11,17 +11,21 @@ type StoreState = {
 };
 
 const STORAGE_KEY = 'motocare:v1:bikes';
+const listeners = new Set<() => void>();
+let state: StoreState = loadState();
 
 function loadState(): StoreState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { bikes: seedBikes() };
+    if (!raw) throw new Error('No bikes found');
     const parsed = JSON.parse(raw) as StoreState;
 
-    if (!parsed || !Array.isArray(parsed.bikes)) return { bikes: seedBikes() };
+    if (!parsed || !Array.isArray(parsed.bikes))
+      throw new Error('No bikes found');
+
     return parsed;
   } catch {
-    return { bikes: seedBikes() };
+    return { bikes: [] };
   }
 }
 
@@ -29,24 +33,9 @@ function saveState(state: StoreState) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-function seedBikes(): Bike[] {
-  return [
-    {
-      id: '1',
-      make: 'Yamaha',
-      year: 2022,
-      model: 'Tracer 9 GT',
-      odo: 24000,
-    },
-  ];
-}
-
 function newId(): string {
   return String(Date.now());
 }
-
-let state: StoreState = loadState();
-const listeners = new Set<() => void>();
 
 function notify() {
   saveState(state);
@@ -105,6 +94,7 @@ export const bikeStore = {
 
     state = { ...state, bikes: [bike, ...state.bikes] };
     notify();
+
     return bike;
   },
 
@@ -139,7 +129,7 @@ export const bikeStore = {
   },
 
   reset() {
-    state = { bikes: seedBikes() };
+    state = { bikes: [] };
     notify();
   },
 };
