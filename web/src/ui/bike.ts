@@ -1,16 +1,34 @@
+import { newId, type Bike, type StoreState } from '../state/bikeStore';
+
 function addBikeToGarage() {
+  const make: string = (
+    document.querySelector('#addBikeName') as HTMLInputElement
+  ).value;
+  const model: string = (
+    document.querySelector('#addBikeModel') as HTMLInputElement
+  ).value;
+  const year: string = (
+    document.querySelector('#addBikeYear') as HTMLInputElement
+  ).value;
+  const odo: string = (
+    document.querySelector('#addBikeOdo') as HTMLInputElement
+  ).value;
+
+  const newBike: Bike = {
+    id: newId(),
+    make,
+    model,
+    year,
+    odo,
+  };
+
+  console.log(newBike);
+
   // add bike
 }
 
 function editBike(): void {
   // edit bike
-}
-
-function removeBikeFromGarage(e: Event) {
-  // remove bike
-  const target = e.target as HTMLElement;
-  const bikeCard = target.closest('.bikeCard');
-  bikeCard?.remove();
 }
 
 export { removeBikeFromGarage, addBikeToGarage, editBike };

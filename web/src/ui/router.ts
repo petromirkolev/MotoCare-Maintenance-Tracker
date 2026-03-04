@@ -5,6 +5,7 @@ import {
   renderRegisterScreen,
 } from '../dom/render';
 import { dom } from '../dom/selectors';
+import { bikeStore, readBikeForm } from '../state/bikeStore';
 
 type Action =
   | 'auth.login'
@@ -50,7 +51,10 @@ function bindEvents(): void {
         break;
 
       case 'bike.add.submit': {
-        (dom.addBikeForm as HTMLFormElement).reset();
+        const form = (dom.addBikeForm as HTMLFormElement) || null;
+        const input = readBikeForm(form);
+        bikeStore.addBike(input);
+        form.reset();
         renderGarageScreen();
         break;
       }
