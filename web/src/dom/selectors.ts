@@ -28,10 +28,6 @@ export const dom = {
 
   // add bike form
   addBikeForm: document.querySelector('[data-testid="add-bike-form"]'),
-  make: document.querySelector('#addBikeName'),
-  model: document.querySelector('#addBikeModel'),
-  year: document.querySelector('#addBikeYear'),
-  odo: document.querySelector('#addBikeOdo'),
 
   // edit bike form
   editBikeForm: document.querySelector('[data-testid="edit-bike-form"]'),
