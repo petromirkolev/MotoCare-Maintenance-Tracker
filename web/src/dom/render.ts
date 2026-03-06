@@ -40,4 +40,8 @@ export const render = {
   editBikeScreen(): void {
     showScreen('bikeEdit');
   },
+
+  logServiceModal(): void {
+    dom.maintenanceModal?.classList.remove('is-hidden');
+  },
 };

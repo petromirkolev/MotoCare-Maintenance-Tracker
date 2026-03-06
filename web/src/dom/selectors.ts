@@ -1,26 +1,50 @@
 export const dom = {
   // top bar
-  logout: document.querySelector('[data-testid="btn-logout"]'),
+  logout: document.querySelector<HTMLElement>('[data-testid="btn-logout"]'),
   userEmail: document.querySelector<HTMLElement>('[data-testid="user-email"]'),
 
   // login screen inputs
-  emailInput: document.querySelector('[data-testid="login-email"]'),
-  passInput: document.querySelector('[data-testid="login-password"]'),
+  emailInput: document.querySelector<HTMLInputElement>(
+    '[data-testid="login-email"]',
+  ),
+  passInput: document.querySelector<HTMLInputElement>(
+    '[data-testid="login-password"]',
+  ),
 
   // register screen inputs
-  regEmailInput: document.querySelector('[data-testid="register-email"]'),
-  regPassInput: document.querySelector('[data-testid="register-password"]'),
-  regPassInput2: document.querySelector('[data-testid="register-password2"]'),
-  registerFormBtn: document.querySelector('[data-testid="btn-register-form"]'),
+  regEmailInput: document.querySelector<HTMLInputElement>(
+    '[data-testid="register-email"]',
+  ),
+  regPassInput: document.querySelector<HTMLInputElement>(
+    '[data-testid="register-password"]',
+  ),
+  regPassInput2: document.querySelector<HTMLInputElement>(
+    '[data-testid="register-password2"]',
+  ),
+  registerFormBtn: document.querySelector<HTMLInputElement>(
+    '[data-testid="btn-register-form"]',
+  ),
 
   // screens
-  nav: document.querySelector('[data-testid="topbar"]'),
-  loginScreen: document.querySelector('[data-testid="screen-login"]'),
-  registerScreen: document.querySelector('[data-testid="screen-register"]'),
-  garageScreen: document.querySelector('[data-testid="screen-garage"]'),
-  bikeScreen: document.querySelector('[data-testid="screen-bike"]'),
-  addBikeScreen: document.querySelector('[data-testid="screen-bike-add"]'),
-  editBikeScreen: document.querySelector('[data-testid="screen-bike-edit"]'),
+  nav: document.querySelector<HTMLElement>('[data-testid="topbar"]'),
+  loginScreen: document.querySelector<HTMLElement>(
+    '[data-testid="screen-login"]',
+  ),
+  registerScreen: document.querySelector<HTMLElement>(
+    '[data-testid="screen-register"]',
+  ),
+  garageScreen: document.querySelector<HTMLElement>(
+    '[data-testid="screen-garage"]',
+  ),
+  bikeScreen: document.querySelector<HTMLElement>(
+    '[data-testid="screen-bike"]',
+  ),
+  addBikeScreen: document.querySelector<HTMLElement>(
+    '[data-testid="screen-bike-add"]',
+  ),
+  editBikeScreen: document.querySelector<HTMLElement>(
+    '[data-testid="screen-bike-edit"]',
+  ),
 
   // garage screen
   garageEmpty: document.querySelector<HTMLElement>(
@@ -31,14 +55,20 @@ export const dom = {
   ),
 
   // bikes grid
-  bikeGrid: document.querySelector('[data-testid="garage-grid"]'),
-  noBikesYetGrid: document.querySelector('[data-testid="garage-empty"]'),
+  bikeGrid: document.querySelector<HTMLElement>('[data-testid="garage-grid"]'),
+  noBikesYetGrid: document.querySelector<HTMLElement>(
+    '[data-testid="garage-empty"]',
+  ),
 
   // add bike form
-  addBikeForm: document.querySelector('[data-testid="add-bike-form"]'),
+  addBikeForm: document.querySelector<HTMLElement>(
+    '[data-testid="add-bike-form"]',
+  ),
 
   // edit bike form
-  editBikeForm: document.querySelector('[data-testid="edit-bike-form"]'),
+  editBikeForm: document.querySelector<HTMLElement>(
+    '[data-testid="edit-bike-form"]',
+  ),
   editBikeId: document.querySelector<HTMLInputElement>('#editBikeId'),
   editMake: document.querySelector<HTMLInputElement>('#editBikeName'),
   editYear: document.querySelector<HTMLInputElement>('#editBikeYear'),
@@ -52,12 +82,18 @@ export const dom = {
   maintenanceDeleteBtn: document.querySelector<HTMLButtonElement>(
     '[data-testid="btn-delete-bike"]',
   ),
-  bikeName: document.querySelector('[data-testid="bike-name"]'),
-  bikeModel: document.querySelector('[data-testid="bike-model"]'),
-  bikeOdo: document.querySelector('[data-testid="bike-odometer"]'),
-  bikeEdit: document.querySelector('[data-testid="btn-edit-bike"]'),
+  bikeName: document.querySelector<HTMLElement>('[data-testid="bike-name"]'),
+  bikeModel: document.querySelector<HTMLElement>('[data-testid="bike-model"]'),
+  bikeOdo: document.querySelector<HTMLElement>('[data-testid="bike-odometer"]'),
+  bikeEdit: document.querySelector<HTMLElement>(
+    '[data-testid="btn-edit-bike"]',
+  ),
 
   // maintenance modal
-  maintenanceModal: document.querySelector('[data-testid="modal-log"]'),
-  maintenanceSchedul: document.querySelector('[data-testid="modal-schedule"]'),
+  maintenanceModal: document.querySelector<HTMLModElement>(
+    '[data-testid="modal-log"]',
+  ),
+  maintenanceSchedule: document.querySelector<HTMLModElement>(
+    '[data-testid="modal-schedule"]',
+  ),
 };

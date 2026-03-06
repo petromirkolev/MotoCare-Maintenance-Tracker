@@ -14,7 +14,7 @@ const SCREENS: Record<Screen, HTMLElement | null> = {
   garage: dom.garageScreen,
   bike: dom.bikeScreen,
   bikeAdd: dom.addBikeScreen,
-  bikeEdit: dom.editBikeScreen ?? null,
+  bikeEdit: dom.editBikeScreen,
 };
 
 function setHidden(el: HTMLElement | null, hidden: boolean) {
@@ -30,5 +30,5 @@ export function showScreen(screen: Screen) {
   setHidden(SCREENS[screen], false);
 
   const isAuth = screen === 'login' || screen === 'register';
-  setHidden(dom.nav ?? null, isAuth);
+  setHidden(dom.nav, isAuth);
 }

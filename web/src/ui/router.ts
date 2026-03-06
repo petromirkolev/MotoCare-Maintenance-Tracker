@@ -16,7 +16,10 @@ type Action =
   | 'bike.edit.open'
   | 'bike.delete'
   | 'bike.add.submit'
-  | 'bike.edit.submit';
+  | 'bike.edit.submit'
+  | 'log.service'
+  | 'schedule.service'
+  | 'modal.close';
 
 function bindEvents(): void {
   document.addEventListener('click', (e: MouseEvent) => {
@@ -74,8 +77,6 @@ function bindEvents(): void {
         appState.selectedBikeId =
           target.closest<HTMLElement>('[data-action]')?.dataset.bikeId;
 
-        console.log(appState.selectedBikeId);
-
         if (!appState.selectedBikeId) break;
 
         appState.selectedBikeFound = bikeStore.getBike(appState.selectedBikeId);
@@ -124,7 +125,7 @@ function bindEvents(): void {
 
         req(dom.maintenanceEditBtn, 'maintenanceEditBtn').dataset.bikeId =
           appState.selectedBikeId;
-        req(dom.maintenanceDeleteBtn, 'maintenanceEditBtn').dataset.bikeId =
+        req(dom.maintenanceDeleteBtn, 'maintenanceDeleteBtn').dataset.bikeId =
           appState.selectedBikeId;
 
         appState.selectedBikeFound = bikeStore.getBike(appState.selectedBikeId);
@@ -137,6 +138,17 @@ function bindEvents(): void {
         (dom.bikeOdo as HTMLElement).innerHTML = String(
           appState.selectedBikeFound.odo,
         );
+        break;
+      }
+
+      case 'log.service': {
+        render.logServiceModal();
+        break;
+      }
+
+      case 'modal.close': {
+        dom.maintenanceModal?.classList.add('is-hidden');
+        break;
       }
     }
   });
