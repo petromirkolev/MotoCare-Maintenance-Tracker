@@ -5,6 +5,7 @@ import { bikeStore, readBikeForm } from '../state/bikeStore';
 import { showScreen } from './showScreen';
 import { appState } from '../types/state';
 import {
+  getMaintenanceTask,
   maintenanceStore,
   readMaintenanceLogForm,
 } from '../state/maintenanceStore';
@@ -151,9 +152,10 @@ function bindEvents(): void {
       }
 
       case 'log.service': {
-        // const el =
-        //   target.closest<HTMLElement>('[data-action]')?.parentElement
-        //     ?.parentElement?.dataset.name;
+        appState.currentMaintenanceItem =
+          target.closest<HTMLElement>(
+            '[data-action]',
+          )?.parentElement?.parentElement?.dataset.name;
 
         render.openServiceModal('log.service');
         break;
@@ -172,11 +174,21 @@ function bindEvents(): void {
       case 'log.submit': {
         const form = (dom.logServiceForm as HTMLFormElement) || null;
         const input = readMaintenanceLogForm(form);
+
         const bikeId = appState.selectedBikeId;
+        const currentTask = appState.currentMaintenanceItem;
 
         if (!bikeId) throw new Error('No bike selected');
+        if (!currentTask) throw new Error('No maintenance item selected');
 
-        maintenanceStore.addMaintenanceTask(input, bikeId);
+        const existingTask = getMaintenanceTask(bikeId, currentTask);
+
+        if (!existingTask) {
+          maintenanceStore.addMaintenanceTask(input, bikeId);
+        } else {
+          maintenanceStore.updateMaintenanceTask(existingTask.id, input);
+        }
+
         form.reset();
         render.closeServiceModal();
         break;

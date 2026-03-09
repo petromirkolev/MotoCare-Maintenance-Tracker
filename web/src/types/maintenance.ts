@@ -1,7 +1,9 @@
 export type Maintenance = {
   id: string;
   bikeId: string;
-  name: string;
-  intervalKm: number | null;
-  intervalDays: number | null;
+  name: string | undefined;
+  date: string | null;
+  odo: string | null;
+  nextOdo: string | null;
+  nextDate: string | null;
 };

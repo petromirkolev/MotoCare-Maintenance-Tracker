@@ -1,5 +1,8 @@
 import type { Maintenance } from '../types/maintenance';
-import { bikeStore, state, notify, saveState } from './bikeStore';
+import type { MaintenanceLog } from '../types/maintenanceLog';
+import { getState, updateState, newId } from './stateStorage';
+import { bikeStore } from './bikeStore';
+import { appState } from '../types/state';
 
 export function readMaintenanceLogForm(form: HTMLFormElement) {
   const fd = new FormData(form);
@@ -13,36 +16,70 @@ export function readMaintenanceLogForm(form: HTMLFormElement) {
   return { date, odo };
 }
 
-// function newId(): string {
-//   return String(Date.now());
-// }
-
-function getMaintenanceForBike(
-  bikeId: string | undefined,
+export function getMaintenanceTask(
+  bikeId: string,
+  name: string,
 ): Maintenance | undefined {
-  return state.maintenance.find((a: any) => a.bikeId === bikeId);
+  return getState().maintenance.find(
+    (a: any) => a.bikeId === bikeId && a.name === name,
+  );
 }
 
 export const maintenanceStore = {
-  addMaintenanceTask(input: Object, bikeId: string) {
-    const selectedBike = bikeStore.getBike(bikeId);
-    const maintenanceRecords = getMaintenanceForBike(bikeId);
+  addMaintenanceTask(input: any, bikeId: string) {
+    const maintenanceItem = appState.currentMaintenanceItem;
 
-    if (maintenanceRecords !== undefined) {
-    } else {
-      console.log('No maintenance records found.');
+    const selectedBike = bikeStore.getBike(bikeId);
+    if (!selectedBike) throw new Error('No bike selected');
+
+    if (!input.date.trim()) throw new Error('Date is required');
+    if (
+      !Number.isFinite(Number(input.odo)) ||
+      Number(input.odo) < selectedBike.odo
+    ) {
+      throw new Error('Invalid odometer');
     }
 
-    console.log(input);
-    console.log(selectedBike);
-    console.log(maintenanceRecords);
+    const currentMaintenanceItem: Maintenance = {
+      id: newId(),
+      bikeId: selectedBike?.id,
+      name: maintenanceItem,
+      odo: input.odo,
+      date: input.date,
+      nextOdo: null,
+      nextDate: null,
+    };
 
-    // odo should not be less than actual odo
+    const currentMaintenanceLog: MaintenanceLog = currentMaintenanceItem;
+
+    updateState((prev) => ({
+      ...prev,
+      maintenance: [currentMaintenanceItem, ...prev.maintenance],
+      maintenanceLog: [currentMaintenanceLog, ...prev.maintenanceLog],
+    }));
   },
 
-  // updateMaintenanceTask(id, patch) {},
+  updateMaintenanceTask(
+    id: string,
+    patch: Partial<Omit<Maintenance, 'id' | 'bikeId' | 'name'>>,
+  ) {
+    const current = getState().maintenance.find((m) => m.id === id);
+    if (!current) throw new Error('Maintenance task not found');
+    console.log(current);
 
-  // deleteMaintenanceTask(id) {},
+    const next: Maintenance = {
+      ...current,
+      ...patch,
+    };
+
+    const currentMaintenanceLog: MaintenanceLog = next;
+
+    updateState((prev) => ({
+      ...prev,
+      maintenance: prev.maintenance.map((m) => (m.id === id ? next : m)),
+      maintenanceLog: [currentMaintenanceLog, ...prev.maintenanceLog],
+    }));
+  },
 
   updateTaskInfo() {},
 
