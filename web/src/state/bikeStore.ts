@@ -1,39 +1,5 @@
 import type { Bike } from '../types/bikes';
-import type { StoreState } from '../types/state';
-
-const STORAGE_KEY = 'motocare:v1:bikes';
-const listeners = new Set<() => void>();
-let state: StoreState = loadBikeState();
-
-function loadBikeState(): StoreState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      return { bikes: [], maintenance: [] };
-    }
-    const parsed = JSON.parse(raw) as Partial<StoreState>;
-
-    return {
-      bikes: Array.isArray(parsed.bikes) ? parsed.bikes : [],
-      maintenance: Array.isArray(parsed.maintenance) ? parsed.maintenance : [],
-    };
-  } catch {
-    return { bikes: [], maintenance: [] };
-  }
-}
-
-function saveState(state: StoreState) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-function newId(): string {
-  return String(Date.now());
-}
-
-function notify() {
-  saveState(state);
-  listeners.forEach((fn) => fn());
-}
+import { getState, updateState, setState, newId } from './stateStorage';
 
 export function readBikeForm(form: HTMLFormElement) {
   const fd = new FormData(form);
@@ -56,26 +22,23 @@ export function readBikeForm(form: HTMLFormElement) {
 }
 
 export const bikeStore = {
-  subscribe(fn: () => void) {
-    listeners.add(fn);
-    return () => listeners.delete(fn);
-  },
-
   getBikes(): Bike[] {
-    return [...state.bikes];
+    return [...getState().bikes];
   },
 
   getBike(id: string): Bike | undefined {
-    return state.bikes.find((b: any) => b.id === id);
+    return getState().bikes.find((b) => b.id === id);
   },
 
-  addBike(input: Omit<Bike, 'id'> | any): Bike {
+  addBike(input: Omit<Bike, 'id'>): Bike {
     if (!input.make.trim()) throw new Error('Bike name required');
-    if (!Number.isFinite(input.year) || input.year < 1900)
+    if (!Number.isFinite(input.year) || input.year < 1900) {
       throw new Error('Invalid year');
+    }
     if (!input.model.trim()) throw new Error('Bike model required');
-    if (!Number.isFinite(input.odo) || input.odo < 0)
+    if (!Number.isFinite(input.odo) || input.odo < 0) {
       throw new Error('Invalid odometer');
+    }
 
     const bike: Bike = {
       id: newId(),
@@ -85,22 +48,30 @@ export const bikeStore = {
       odo: Math.floor(input.odo),
     };
 
-    state = { ...state, bikes: [bike, ...state.bikes] };
-    notify();
+    updateState((prev) => ({
+      ...prev,
+      bikes: [bike, ...prev.bikes],
+    }));
 
     return bike;
   },
 
   deleteBike(id: string | undefined) {
-    state = { ...state, bikes: state.bikes.filter((b: any) => b.id !== id) };
-    notify();
+    if (!id) return;
+
+    updateState((prev) => ({
+      ...prev,
+      bikes: prev.bikes.filter((b) => b.id !== id),
+      maintenance: prev.maintenance.filter((m) => m.bikeId !== id),
+      maintenanceLog: prev.maintenanceLog.filter((l) => l.bikeId !== id),
+    }));
   },
 
   updateBike(id: string, patch: Partial<Omit<Bike, 'id'>>) {
-    const current = state.bikes.find((b: any) => b.id === id);
+    const current = getState().bikes.find((b) => b.id === id);
     if (!current) throw new Error('Bike not found');
 
-    const next: Bike | any = {
+    const next: Bike = {
       ...current,
       ...patch,
     };
@@ -114,15 +85,13 @@ export const bikeStore = {
     next.year = Math.floor(next.year);
     next.odo = Math.floor(next.odo);
 
-    state = {
-      ...state,
-      bikes: state.bikes.map((b) => (b.id === id ? next : b)),
-    };
-    notify();
+    updateState((prev) => ({
+      ...prev,
+      bikes: prev.bikes.map((b) => (b.id === id ? next : b)),
+    }));
   },
 
   reset() {
-    state = { bikes: [], maintenance: [] };
-    notify();
+    setState({ bikes: [], maintenance: [], maintenanceLog: [] });
   },
 };

@@ -1,12 +1,5 @@
-import { req } from '../utils/domHelper';
-import { dom } from '../dom/selectors';
-import type { MaintenanceTask } from '../types/maintenance';
-
-const STORAGE_KEY = 'motocare:v1:maintenance';
-const listeners = new Set<() => void>();
-let state: MaintenanceStoreState = loadMaintenanceState();
-
-function loadMaintenanceState(): MaintenanceStoreState {}
+import type { Maintenance } from '../types/maintenance';
+import { bikeStore, state, notify, saveState } from './bikeStore';
 
 export function readMaintenanceLogForm(form: HTMLFormElement) {
   const fd = new FormData(form);
@@ -20,25 +13,46 @@ export function readMaintenanceLogForm(form: HTMLFormElement) {
   return { date, odo };
 }
 
+// function newId(): string {
+//   return String(Date.now());
+// }
+
+function getMaintenanceForBike(
+  bikeId: string | undefined,
+): Maintenance | undefined {
+  return state.maintenance.find((a: any) => a.bikeId === bikeId);
+}
+
 export const maintenanceStore = {
-  updateTaskInfo() {},
+  addMaintenanceTask(input: Object, bikeId: string) {
+    const selectedBike = bikeStore.getBike(bikeId);
+    const maintenanceRecords = getMaintenanceForBike(bikeId);
 
-  addLog(input: Object) {
+    if (maintenanceRecords !== undefined) {
+    } else {
+      console.log('No maintenance records found.');
+    }
+
     console.log(input);
-
-    const bikeId = req(dom.bikeScreen, 'bikeScreen').dataset.bikeId;
-
-    console.log(bikeId);
+    console.log(selectedBike);
+    console.log(maintenanceRecords);
 
     // odo should not be less than actual odo
   },
-  schedule() {
-    console.log('log scheduled');
-  },
+
+  // updateMaintenanceTask(id, patch) {},
+
+  // deleteMaintenanceTask(id) {},
+
+  updateTaskInfo() {},
 
   updateRecentHistory() {},
 
   updateMaintenanceItemProgress() {},
 
   updateOverallProgress() {},
+
+  schedule() {
+    console.log('log scheduled');
+  },
 };

@@ -151,11 +151,9 @@ function bindEvents(): void {
       }
 
       case 'log.service': {
-        const el =
-          target.closest<HTMLElement>('[data-action]')?.parentElement
-            ?.parentElement?.dataset.name;
-
-        console.log(el);
+        // const el =
+        //   target.closest<HTMLElement>('[data-action]')?.parentElement
+        //     ?.parentElement?.dataset.name;
 
         render.openServiceModal('log.service');
         break;
@@ -174,9 +172,11 @@ function bindEvents(): void {
       case 'log.submit': {
         const form = (dom.logServiceForm as HTMLFormElement) || null;
         const input = readMaintenanceLogForm(form);
+        const bikeId = appState.selectedBikeId;
 
-        maintenanceStore.addLog(input);
+        if (!bikeId) throw new Error('No bike selected');
 
+        maintenanceStore.addMaintenanceTask(input, bikeId);
         form.reset();
         render.closeServiceModal();
         break;
