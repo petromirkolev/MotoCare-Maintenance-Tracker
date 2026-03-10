@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3';
 
-const DB_PATH = './data/motocare.sqlite';
+const DB_PATH = process.env.DB_PATH || './data/motocare.sqlite';
 
 export const db = new sqlite3.Database(DB_PATH, (err) => {
   if (err) {

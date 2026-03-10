@@ -1,7 +1,13 @@
+import {
+  createUser,
+  findUserByEmail,
+  verifyUserPassword,
+} from '../services/auth-service';
 import { Router } from 'express';
-import bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
-import { getOne, runQuery } from '../db-helpers';
+import { AuthBody } from '../types/auth-body';
+import { getValidatedAuthBody } from '../utils/auth-validation';
+
+const INVALID_CREDENTIALS_ERROR = 'Invalid credentials';
 
 type UserRow = {
   id: string;
@@ -14,12 +20,14 @@ const authRouter = Router();
 
 /* Register endpoint */
 authRouter.post('/register', async (req, res) => {
-  const { email, password } = req.body ?? {};
+  const validatedBody = getValidatedAuthBody((req.body ?? {}) as AuthBody);
 
-  if (!email || !password) {
+  if (!validatedBody) {
     res.status(400).json({ error: 'Email and password are required' });
     return;
   }
+
+  const { email, password } = validatedBody;
 
   try {
     const existingUser = await getOne<UserRow>(
@@ -51,12 +59,14 @@ authRouter.post('/register', async (req, res) => {
 
 /* Login endpoint */
 authRouter.post('/login', async (req, res) => {
-  const { email, password } = req.body ?? {};
+  const validatedBody = getValidatedAuthBody((req.body ?? {}) as AuthBody);
 
-  if (!email || !password) {
+  if (!validatedBody) {
     res.status(400).json({ error: 'Email and password are required' });
     return;
   }
+
+  const { email, password } = validatedBody;
 
   try {
     const user = await getOne<UserRow>('SELECT * FROM users WHERE email = ?', [
@@ -64,14 +74,14 @@ authRouter.post('/login', async (req, res) => {
     ]);
 
     if (!user) {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ error: INVALID_CREDENTIALS_ERROR });
       return;
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!isPasswordValid) {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ error: INVALID_CREDENTIALS_ERROR });
       return;
     }
 
