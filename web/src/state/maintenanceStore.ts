@@ -45,10 +45,7 @@ export const maintenanceStore = {
     if (!selectedBike) throw new Error('No bike selected');
 
     if (!input.date.trim()) throw new Error('Date is required');
-    if (
-      !Number.isFinite(Number(input.odo)) ||
-      Number(input.odo) < Number(selectedBike.odo)
-    ) {
+    if (!Number.isFinite(Number(input.odo)) || Number(input.odo) < 0) {
       throw new Error('Invalid odometer');
     }
 
@@ -175,8 +172,6 @@ export const maintenanceStore = {
     });
     if (!current) throw new Error('Maintenance task not found');
 
-    console.log(patch);
-
     const next: Maintenance = {
       ...current,
       ...patch,
@@ -184,7 +179,9 @@ export const maintenanceStore = {
 
     updateState((prev) => ({
       ...prev,
-      maintenance: prev.maintenance.map((m) => (m.id === id ? next : m)),
+      maintenance: prev.maintenance.map((m) =>
+        m.id === current.id ? next : m,
+      ),
     }));
   },
 };

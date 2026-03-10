@@ -1,3 +1,4 @@
+import { dom } from '../dom/selectors';
 import type { Bike } from '../types/bikes';
 import { getState, updateState, setState, newId } from './stateStorage';
 
@@ -77,6 +78,7 @@ export const bikeStore = {
     };
 
     if (patch.odo !== undefined && patch.odo < current.odo) {
+      dom.editOdoHint!.textContent = 'Odometer cannot decrease.';
       throw new Error('Odometer cannot decrease');
     }
 

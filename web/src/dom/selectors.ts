@@ -77,6 +77,9 @@ export const dom = {
   editYear: document.querySelector<HTMLInputElement>('#editBikeYear'),
   editModel: document.querySelector<HTMLInputElement>('#editBikeModel'),
   editOdo: document.querySelector<HTMLInputElement>('#editBikeOdo'),
+  editOdoHint: document.querySelector<HTMLElement>(
+    '[data-testid="edit-odo-hint"]',
+  ),
 
   // maintenance header
   maintenanceEditBtn: document.querySelector<HTMLButtonElement>(
