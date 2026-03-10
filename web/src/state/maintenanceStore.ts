@@ -3,6 +3,9 @@ import type { MaintenanceLog } from '../types/maintenanceLog';
 import { getState, updateState, newId } from './stateStorage';
 import { bikeStore } from './bikeStore';
 import { appState } from '../types/state';
+import { checkDueStatus } from '../utils/serviceDueHelper';
+import { checkOverdueStatus } from '../utils/serviceOverdueHelper';
+import { checkServiceItemsStatus } from '../utils/serviceItemsHelper';
 
 export function readMaintenanceLogForm(form: HTMLFormElement) {
   const fd = new FormData(form);
@@ -19,13 +22,13 @@ export function readMaintenanceLogForm(form: HTMLFormElement) {
 export function readMaintenanceScheduleForm(form: HTMLFormElement) {
   const fd = new FormData(form);
 
-  const nextDate = String(fd.get('intervalDays') ?? '').trim();
-  const nextOdo = String(fd.get('intervalKm') ?? '').trim();
+  const intervalDays = String(fd.get('intervalDays') ?? '').trim();
+  const intervalKm = String(fd.get('intervalKm') ?? '').trim();
 
-  if (!nextDate) throw new Error('Interval days are required');
-  if (!nextOdo) throw new Error('Interval kilometers are required');
+  if (!intervalDays) throw new Error('Interval days are required');
+  if (!intervalKm) throw new Error('Interval kilometers are required');
 
-  return { nextDate, nextOdo };
+  return { intervalDays, intervalKm };
 }
 
 export function getMaintenanceTask(
@@ -55,8 +58,8 @@ export const maintenanceStore = {
       name: maintenanceItem,
       odo: input.odo,
       date: input.date,
-      nextOdo: null,
-      nextDate: null,
+      intervalKm: null,
+      intervalDays: null,
     };
 
     const currentMaintenanceLog: MaintenanceLog = currentMaintenanceItem;
@@ -121,11 +124,11 @@ export const maintenanceStore = {
       }
 
       const nextDate = new Date(task.date);
-      nextDate.setDate(nextDate.getDate() + 365);
+      nextDate.setDate(nextDate.getDate() + Number(task.intervalDays));
 
       dueVal.textContent =
-        task.nextDate && task.nextOdo !== null
-          ? `On ${nextDate.toISOString().slice(0, 10)} or ${task.nextOdo} km.`
+        task.intervalDays && task.intervalKm !== null
+          ? `On ${nextDate.toISOString().slice(0, 10)} or ${task.intervalKm} km.`
           : 'Not done yet';
     });
   },
@@ -133,22 +136,22 @@ export const maintenanceStore = {
   updateOverallProgress(dom: any) {
     const items = getState();
     const selectedBike = appState.selectedBikeId;
+    const today = new Date().toISOString().slice(0, 10);
     const lastServicedItem = items.maintenanceLog.find(
       (item) => item.bikeId === selectedBike,
     );
-    const totalDueItems = items.maintenance.filter((item) => {
-      item.nextDate !== null || item.nextOdo !== null;
-    });
 
-    const totalServiceItems = items.maintenance.filter(
-      (item) => item.bikeId === selectedBike,
+    const totalDueItems = items.maintenance.filter((item) =>
+      checkDueStatus(item, today),
     );
 
-    const today = new Date().toISOString().slice(0, 10);
+    const totalServiceItems = items.maintenance.filter((item) =>
+      checkServiceItemsStatus(item),
+    );
 
-    const totalOverdueItems = items.maintenance.filter((item) => {
-      item.nextDate !== null && item.nextDate < today;
-    });
+    const totalOverdueItems = items.maintenance.filter((item) =>
+      checkOverdueStatus(item, selectedBike!, today),
+    );
 
     // Update "Recent History"
     if (lastServicedItem !== undefined) {

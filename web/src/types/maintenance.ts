@@ -4,6 +4,6 @@ export type Maintenance = {
   name: string | undefined;
   date: string | null;
   odo: string | null;
-  nextOdo: string | null;
-  nextDate: string | null;
+  intervalKm: string | null;
+  intervalDays: string | null;
 };

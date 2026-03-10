@@ -151,7 +151,6 @@ function bindEvents(): void {
 
         maintenanceStore.updateTaskInfo(appState.selectedBikeId);
         maintenanceStore.updateOverallProgress(dom);
-
         break;
       }
 
@@ -216,7 +215,8 @@ function bindEvents(): void {
         if (!currentTask) throw new Error('No maintenance item selected');
 
         maintenanceStore.scheduleTask(bikeId, currentTask, input);
-
+        maintenanceStore.updateTaskInfo(bikeId);
+        maintenanceStore.updateOverallProgress(dom);
         render.closeServiceModal();
         form.reset();
 
