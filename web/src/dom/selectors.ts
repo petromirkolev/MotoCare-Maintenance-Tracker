@@ -7,10 +7,10 @@ export const dom = {
   button: document.querySelector('.btn--primary'),
 
   // login screen inputs
-  emailInput: document.querySelector<HTMLInputElement>(
+  loginEmailInput: document.querySelector<HTMLInputElement>(
     '[data-testid="login-email"]',
   ),
-  passInput: document.querySelector<HTMLInputElement>(
+  loginPassInput: document.querySelector<HTMLInputElement>(
     '[data-testid="login-password"]',
   ),
 
@@ -67,18 +67,19 @@ export const dom = {
   addBikeForm: document.querySelector<HTMLFormElement>(
     '[data-testid="add-bike-form"]',
   ),
+  addHind: document.querySelector('[data-testid="add-hint"]'),
 
   // edit bike form
   editBikeForm: document.querySelector<HTMLElement>(
     '[data-testid="edit-bike-form"]',
   ),
   editBikeId: document.querySelector<HTMLInputElement>('#editBikeId'),
-  editMake: document.querySelector<HTMLInputElement>('#editBikeName'),
-  editYear: document.querySelector<HTMLInputElement>('#editBikeYear'),
-  editModel: document.querySelector<HTMLInputElement>('#editBikeModel'),
-  editOdo: document.querySelector<HTMLInputElement>('#editBikeOdo'),
-  editOdoHint: document.querySelector<HTMLElement>(
-    '[data-testid="edit-odo-hint"]',
+  editBikeMake: document.querySelector<HTMLInputElement>('#editBikeName'),
+  editBikeYear: document.querySelector<HTMLInputElement>('#editBikeYear'),
+  editBikeModel: document.querySelector<HTMLInputElement>('#editBikeModel'),
+  editBikeOdo: document.querySelector<HTMLInputElement>('#editBikeOdo'),
+  editBikeHint: document.querySelector<HTMLElement>(
+    '[data-testid="edit-hint"]',
   ),
 
   // maintenance header
@@ -88,10 +89,16 @@ export const dom = {
   maintenanceDeleteBtn: document.querySelector<HTMLButtonElement>(
     '[data-testid="btn-delete-bike"]',
   ),
-  bikeName: document.querySelector<HTMLElement>('[data-testid="bike-name"]'),
-  bikeModel: document.querySelector<HTMLElement>('[data-testid="bike-model"]'),
-  bikeOdo: document.querySelector<HTMLElement>('[data-testid="bike-odometer"]'),
-  bikeEdit: document.querySelector<HTMLElement>(
+  maintenanceBikeName: document.querySelector<HTMLElement>(
+    '[data-testid="bike-name"]',
+  ),
+  maintenanceBikeModel: document.querySelector<HTMLElement>(
+    '[data-testid="bike-model"]',
+  ),
+  maintenanceBikeOdo: document.querySelector<HTMLElement>(
+    '[data-testid="bike-odometer"]',
+  ),
+  maintenanceBikeEdit: document.querySelector<HTMLElement>(
     '[data-testid="btn-edit-bike"]',
   ),
 
@@ -112,8 +119,12 @@ export const dom = {
   ),
 
   // maintenance stats
-  onTrack: document.querySelector('[data-testid="stat-ok-count"]'),
-  dueSoon: document.querySelector('[data-testid="stat-dueSoon-count"]'),
-  overdue: document.querySelector('[data-testid="stat-overdue-count"]'),
-  history: document.querySelector('[data-testid="history-empty"]'),
+  maintenanceOnTrack: document.querySelector('[data-testid="stat-ok-count"]'),
+  maintenanceDueSoon: document.querySelector(
+    '[data-testid="stat-dueSoon-count"]',
+  ),
+  maintenanceOverdue: document.querySelector(
+    '[data-testid="stat-overdue-count"]',
+  ),
+  maintenanceHistory: document.querySelector('[data-testid="history-empty"]'),
 };

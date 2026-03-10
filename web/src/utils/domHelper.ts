@@ -19,3 +19,20 @@ export function markOverdueTasks(item: any) {
     });
   });
 }
+
+export function markDueTasks(item: any) {
+  document.querySelectorAll('.mcard').forEach((cardEl) => {
+    const card = cardEl as HTMLElement;
+    card
+      .querySelector<HTMLElement>('.mcard__top .mcard__title')
+      ?.classList.remove('is-due');
+
+    item.forEach((item: any) => {
+      if (item.name === card.dataset.name) {
+        card
+          .querySelector<HTMLElement>('.mcard__top .mcard__title')
+          ?.classList.add('is-due');
+      }
+    });
+  });
+}

@@ -69,6 +69,8 @@ export const bikeStore = {
   },
 
   updateBike(id: string, patch: Partial<Omit<Bike, 'id'>>) {
+    dom.editBikeHint!.textContent = '';
+
     const current = getState().bikes.find((b) => b.id === id);
     if (!current) throw new Error('Bike not found');
 
@@ -77,8 +79,13 @@ export const bikeStore = {
       ...patch,
     };
 
+    if (patch.year !== undefined && (patch.year < 1900 || patch.year > 2100)) {
+      dom.editBikeHint!.textContent = 'Invalid year';
+      throw new Error('Invalid year');
+    }
+
     if (patch.odo !== undefined && patch.odo < current.odo) {
-      dom.editOdoHint!.textContent = 'Odometer cannot decrease.';
+      dom.editBikeHint!.textContent = 'Odometer cannot decrease';
       throw new Error('Odometer cannot decrease');
     }
 

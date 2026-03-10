@@ -105,7 +105,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: #4b39ff;
+  color: black;
   font-weight: 900;
 }
 
@@ -496,7 +496,11 @@ body {
 }
 
 .mcard__title.is-overdue {
-  color: red;
+  color: red !important;
+}
+
+.mcard__title.is-due {
+  color: orange;
 }
 
 .mcard__sub {

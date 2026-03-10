@@ -13,7 +13,13 @@
       <div class="nav__inner">
         <div class="brand" data-testid="brand">
           <span class="brand__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+            <img
+                  class="auth__logoImg"
+                  src="./src/assets/logo.png"
+                  alt="MotoCare"
+                  width="75"
+                  height="75"
+                  data-testid="login-logo" />
               <path
                 d="M6.5 16.5a3.5 3.5 0 1 0 0 .01Zm11 0a3.5 3.5 0 1 0 0 .01Z"
                 stroke="currentColor"
@@ -35,9 +41,8 @@
                 stroke-linecap="round" />
             </svg>
           </span>
-          <span class="brand__name">MotoCare</span>
+          <span class="brand__name">Moto Care</span>
         </div>
-
         <div class="nav__right" data-testid="nav-right">
           <span class="user" data-testid="user-email">—</span>
           <button
@@ -335,6 +340,7 @@
                   Save Motorcycle
                 </button>
               </div>
+              <div class="formHint" data-testid="add-hint"></div>
             </form>
           </div>
         </div>
@@ -439,7 +445,7 @@
                 </button>
               </div>
 
-              <div class="formHint" data-testid="edit-odo-hint"></div>
+              <div class="formHint" data-testid="edit-hint"></div>
             </form>
           </div>
         </div>
@@ -1334,10 +1340,6 @@
               min="0"
               placeholder="e.g. 180"
               data-testid="schedule-interval-days" />
-
-            <div class="formHint" data-testid="schedule-hint">
-              Set at least one of km or days.
-            </div>
 
             <div class="formActions">
               <button

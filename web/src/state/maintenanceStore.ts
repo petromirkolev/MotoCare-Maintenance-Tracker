@@ -6,7 +6,7 @@ import { appState } from '../types/state';
 import { checkDueStatus } from '../utils/serviceDueHelper';
 import { checkOverdueStatus } from '../utils/serviceOverdueHelper';
 import { checkServiceItemsStatus } from '../utils/serviceItemsHelper';
-import { markOverdueTasks } from '../utils/domHelper';
+import { markDueTasks, markOverdueTasks } from '../utils/domHelper';
 //
 export function readMaintenanceLogForm(form: HTMLFormElement) {
   const fd = new FormData(form);
@@ -156,28 +156,29 @@ export const maintenanceStore = {
 
     // Update "Recent History"
     if (lastServicedItem !== undefined) {
-      dom.history.querySelector('.empty__title').textContent =
+      dom.maintenanceHistory.querySelector('.empty__title').textContent =
         lastServicedItem.name
           ?.split('-')
           .map((a) => a.toUpperCase())
           .join(' ');
-      dom.history.querySelector('.empty__sub').textContent =
+      dom.maintenanceHistory.querySelector('.empty__sub').textContent =
         `Done on ${lastServicedItem.date} @ ${lastServicedItem.odo} km.`;
     } else {
-      dom.history.querySelector('.empty__title').textContent =
+      dom.maintenanceHistory.querySelector('.empty__title').textContent =
         'No service history yet';
-      dom.history.querySelector('.empty__sub').textContent =
+      dom.maintenanceHistory.querySelector('.empty__sub').textContent =
         'Log a service to start building your maintenance timeline.';
     }
 
     // Update Overdue / Due Soon / On Track
-    dom.onTrack.textContent =
+    dom.maintenanceOnTrack.textContent =
       totalServiceItems.length - totalOverdueItems.length;
-    dom.dueSoon.textContent = totalDueItems.length;
-    dom.overdue.textContent = totalOverdueItems.length;
+    dom.maintenanceDueSoon.textContent = totalDueItems.length;
+    dom.maintenanceOverdue.textContent = totalOverdueItems.length;
 
     // Mark overdue tasks
     markOverdueTasks(totalOverdueItems);
+    markDueTasks(totalDueItems);
   },
 
   scheduleTask(

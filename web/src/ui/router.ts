@@ -90,10 +90,10 @@ function bindEvents(): void {
         appState.selectedBikeFound = bikeStore.getBike(appState.selectedBikeId);
         if (!appState.selectedBikeFound) break;
 
-        const editMake = dom.editMake;
-        const editYear = dom.editYear;
-        const editModel = dom.editModel;
-        const editOdo = dom.editOdo;
+        const editMake = dom.editBikeMake;
+        const editYear = dom.editBikeYear;
+        const editModel = dom.editBikeModel;
+        const editOdo = dom.editBikeOdo;
         const editId = dom.editBikeId;
 
         if (!editMake || !editYear || !editModel || !editOdo || !editId) {
@@ -141,11 +141,11 @@ function bindEvents(): void {
         appState.selectedBikeFound = bikeStore.getBike(appState.selectedBikeId);
         if (!appState.selectedBikeFound) break;
 
-        (dom.bikeName as HTMLElement).innerHTML =
+        (dom.maintenanceBikeName as HTMLElement).innerHTML =
           appState.selectedBikeFound.make;
-        (dom.bikeModel as HTMLElement).innerHTML =
+        (dom.maintenanceBikeModel as HTMLElement).innerHTML =
           appState.selectedBikeFound.model;
-        (dom.bikeOdo as HTMLElement).innerHTML = String(
+        (dom.maintenanceBikeOdo as HTMLElement).innerHTML = String(
           appState.selectedBikeFound.odo,
         );
 
