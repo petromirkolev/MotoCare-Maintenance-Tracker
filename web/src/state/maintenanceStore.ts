@@ -110,7 +110,7 @@ export const maintenanceStore = {
       const task = getMaintenanceTask(bikeId, taskName);
       if (!task) {
         lastVal.textContent = 'Never logged';
-        dueVal.textContent = 'Not done yet';
+        dueVal.textContent = 'Not scheduled yet';
         return;
       }
 
@@ -170,7 +170,8 @@ export const maintenanceStore = {
     }
 
     // Update Overdue / Due Soon / On Track
-    dom.onTrack.textContent = totalServiceItems.length;
+    dom.onTrack.textContent =
+      totalServiceItems.length - totalOverdueItems.length;
     dom.dueSoon.textContent = totalDueItems.length;
     dom.overdue.textContent = totalOverdueItems.length;
   },
