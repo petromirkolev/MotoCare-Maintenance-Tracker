@@ -117,6 +117,8 @@ export const maintenanceStore = {
         return;
       }
 
+      console.log(task);
+
       lastVal.textContent =
         task.date && task.odo !== null
           ? `On ${task.date} at ${task.odo} km.`
