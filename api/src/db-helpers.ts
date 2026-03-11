@@ -28,3 +28,16 @@ export function getOne<T>(
     });
   });
 }
+
+export function getAll<T>(sql: string, params: unknown[] = []): Promise<T[]> {
+  return new Promise((resolve, reject) => {
+    db.all(sql, params, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(rows as T[]);
+    });
+  });
+}

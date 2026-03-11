@@ -70,7 +70,7 @@ function bindEvents(): void {
           render.errorMessage('Login success, opening garage...', 'auth.login');
           setTimeout(() => {
             render.garageScreen();
-          }, 3000);
+          }, 2000);
         } catch (error) {
           error instanceof Error
             ? render.errorMessage(error.message, action)
