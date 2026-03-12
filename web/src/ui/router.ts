@@ -72,7 +72,7 @@ function bindEvents(): void {
           render.errorMessage('Login success, opening garage...', 'auth.login');
           setTimeout(() => {
             render.garageScreen();
-          }, 2000);
+          }, 1000);
         } catch (error) {
           error instanceof Error
             ? render.errorMessage(error.message, action)
@@ -91,12 +91,12 @@ function bindEvents(): void {
         try {
           const regForm = dom.regForm as HTMLFormElement;
           const input = readRegForm(regForm);
-          await registerUser(input.email, input.password);
+          await registerUser(input.email.toLowerCase(), input.password);
           render.errorMessage('Registration successful!', 'auth.register');
           regForm?.reset();
           setTimeout(() => {
             render.initialScreen();
-          }, 3000);
+          }, 1500);
         } catch (error) {
           error instanceof Error
             ? render.errorMessage(error.message, action)
@@ -163,12 +163,11 @@ function bindEvents(): void {
         render.editBikeScreen();
 
         appState.selectedBikeId =
-          target.closest<HTMLElement>('[data-action]')?.dataset.bikeId;
-
+          target.closest<HTMLElement>('[data-action]')?.dataset.bikeId || null;
         if (!appState.selectedBikeId) break;
 
-        appState.selectedBikeFound = bikeStore.getBike(appState.selectedBikeId);
-        if (!appState.selectedBikeFound) break;
+        const selectedBike = bikeStore.getBike(appState.selectedBikeId);
+        if (!selectedBike) break;
 
         const editMake = dom.editBikeMake;
         const editYear = dom.editBikeYear;
@@ -181,10 +180,10 @@ function bindEvents(): void {
         }
 
         editId.value = appState.selectedBikeId;
-        editMake.value = appState.selectedBikeFound.make;
-        editYear.value = String(appState.selectedBikeFound.year);
-        editModel.value = appState.selectedBikeFound.model;
-        editOdo.value = String(appState.selectedBikeFound.odo);
+        editMake.value = selectedBike.make;
+        editYear.value = String(selectedBike.year);
+        editModel.value = selectedBike.model;
+        editOdo.value = String(selectedBike.odo);
 
         break;
 
@@ -223,7 +222,7 @@ function bindEvents(): void {
         render.maintenanceScreen();
 
         appState.selectedBikeId =
-          target.closest<HTMLElement>('[data-action]')?.dataset.bikeId;
+          target.closest<HTMLElement>('[data-action]')?.dataset.bikeId || null;
         if (!appState.selectedBikeId) break;
 
         req(dom.maintenanceEditBtn, 'maintenanceEditBtn').dataset.bikeId =
@@ -233,15 +232,14 @@ function bindEvents(): void {
         req(dom.bikeScreen, 'bikeScreen').dataset.bikeId =
           appState.selectedBikeId;
 
-        appState.selectedBikeFound = bikeStore.getBike(appState.selectedBikeId);
-        if (!appState.selectedBikeFound) break;
+        const selectedBike = bikeStore.getBike(appState.selectedBikeId);
+        if (!selectedBike) break;
 
-        (dom.maintenanceBikeName as HTMLElement).innerHTML =
-          appState.selectedBikeFound.make;
+        (dom.maintenanceBikeName as HTMLElement).innerHTML = selectedBike.make;
         (dom.maintenanceBikeModel as HTMLElement).innerHTML =
-          appState.selectedBikeFound.model;
+          selectedBike.model;
         (dom.maintenanceBikeOdo as HTMLElement).innerHTML = String(
-          appState.selectedBikeFound.odo,
+          selectedBike.odo,
         );
 
         await refreshMaintenance(appState.selectedBikeId);

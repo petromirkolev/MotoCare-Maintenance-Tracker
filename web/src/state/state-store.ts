@@ -1,12 +1,10 @@
-/* State store for the application */
-
 import { fetchBikes } from '../api/bikes';
 import { fetchMaintenanceByBikeId } from '../api/maintenance';
 import { fetchMaintenanceLogsByBikeId } from '../api/maintenance-logs';
 import type { StoreState } from '../types/state';
 
-const STORAGE_KEY = 'motocare:v1:bikes';
 const listeners = new Set<() => void>();
+
 let state: StoreState = {
   bikes: [],
   maintenance: [],
@@ -15,24 +13,24 @@ let state: StoreState = {
 
 async function initState(): Promise<void> {
   state = await loadState();
+  notify();
 }
 
 async function loadState(): Promise<StoreState> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const parsed = raw ? (JSON.parse(raw) as Partial<StoreState>) : {};
-
     const bikes = await fetchBikes();
 
     return {
       bikes: Array.isArray(bikes) ? bikes : [],
-      maintenance: Array.isArray(parsed.maintenance) ? parsed.maintenance : [],
-      maintenanceLog: Array.isArray(parsed.maintenanceLog)
-        ? parsed.maintenanceLog
-        : [],
+      maintenance: [],
+      maintenanceLog: [],
     };
   } catch {
-    return { bikes: [], maintenance: [], maintenanceLog: [] };
+    return {
+      bikes: [],
+      maintenance: [],
+      maintenanceLog: [],
+    };
   }
 }
 
@@ -50,10 +48,6 @@ function updateState(updater: (prev: StoreState) => StoreState): void {
   notify();
 }
 
-function saveState(state: StoreState) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
 async function refreshBikes(): Promise<void> {
   const bikes = await fetchBikes();
 
@@ -61,6 +55,8 @@ async function refreshBikes(): Promise<void> {
     ...state,
     bikes: Array.isArray(bikes) ? bikes : [],
   };
+
+  notify();
 }
 
 async function refreshMaintenance(bikeId: string): Promise<void> {
@@ -70,6 +66,8 @@ async function refreshMaintenance(bikeId: string): Promise<void> {
     ...state,
     maintenance: Array.isArray(maintenance) ? maintenance : [],
   };
+
+  notify();
 }
 
 async function refreshMaintenanceLogs(bikeId: string): Promise<void> {
@@ -79,14 +77,11 @@ async function refreshMaintenanceLogs(bikeId: string): Promise<void> {
     ...state,
     maintenanceLog: Array.isArray(maintenanceLog) ? maintenanceLog : [],
   };
-}
 
-function newId(): string {
-  return String(Date.now());
+  notify();
 }
 
 function notify() {
-  saveState(state);
   listeners.forEach((fn) => fn());
 }
 
@@ -96,12 +91,8 @@ function subscribe(fn: () => void) {
 }
 
 export {
-  STORAGE_KEY,
   initState,
-  listeners,
-  newId,
   loadState,
-  saveState,
   notify,
   subscribe,
   setState,

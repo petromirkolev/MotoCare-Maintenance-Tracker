@@ -26,7 +26,7 @@ export async function createUser(
       INSERT INTO users (id, email, password_hash, created_at)
       VALUES (?, ?, ?, ?)
     `,
-    [uuidv4(), email, passwordHash, new Date().toISOString()],
+    [uuidv4(), email.toLowerCase(), passwordHash, new Date().toISOString()],
   );
 }
 

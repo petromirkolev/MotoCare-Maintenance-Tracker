@@ -12,15 +12,11 @@ export type StoreState = {
 };
 
 type AppState = {
-  selectedBikeId: string | undefined;
-  selectedBikeFound: Bike | undefined;
-  currentMaintenanceItem: string;
-  lastMaintenanceLog: string | undefined;
+  selectedBikeId: string | null;
+  currentMaintenanceItem: string | null;
 };
 
 export const appState: AppState = {
-  selectedBikeId: undefined,
-  selectedBikeFound: undefined,
-  currentMaintenanceItem: '',
-  lastMaintenanceLog: undefined,
+  selectedBikeId: null,
+  currentMaintenanceItem: null,
 };

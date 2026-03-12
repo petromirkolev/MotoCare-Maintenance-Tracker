@@ -35,7 +35,7 @@ export function getCurrentUser(): AuthUser | null {
 
 export function readLoginForm(form: HTMLFormElement) {
   const fd = new FormData(form);
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   const email: string = String(fd.get('email') ?? '').trim();
   if (!email) throw new Error('Email is required');
@@ -51,7 +51,7 @@ export function readLoginForm(form: HTMLFormElement) {
 
 export function readRegForm(form: HTMLFormElement) {
   const fd = new FormData(form);
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   const email: string = String(fd.get('email') ?? '').trim();
   if (!email) throw new Error('Email is required');
