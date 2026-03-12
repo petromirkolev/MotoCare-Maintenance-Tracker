@@ -1,6 +1,11 @@
 import { Router } from 'express';
 import { CreateMaintenanceLogBody } from '../types/maintenance-log';
 import {
+  isNonNegativeInteger,
+  isValidIsoLikeDate,
+  normalizeString,
+} from '../utils/validation';
+import {
   createMaintenanceLog,
   listMaintenanceLogsByBikeId,
 } from '../services/maintenance-log-service';
@@ -26,12 +31,25 @@ maintenanceLogsRouter.get('/', async (req, res) => {
 
 maintenanceLogsRouter.post('/', async (req, res) => {
   const body = (req.body ?? {}) as CreateMaintenanceLogBody;
-  const { bike_id, name, date, odo } = body;
+
+  const bike_id = normalizeString(body.bike_id);
+  const name = normalizeString(body.name);
+  const { date, odo } = body;
 
   if (!bike_id || !name || !date || odo === undefined) {
     res
       .status(400)
-      .json({ error: 'bike id, name, date, and odo are required' });
+      .json({ error: 'bike_id, name, date, and odo are required' });
+    return;
+  }
+
+  if (!isValidIsoLikeDate(date)) {
+    res.status(400).json({ error: 'Invalid date' });
+    return;
+  }
+
+  if (!isNonNegativeInteger(odo)) {
+    res.status(400).json({ error: 'Odo must be a non-negative integer' });
     return;
   }
 

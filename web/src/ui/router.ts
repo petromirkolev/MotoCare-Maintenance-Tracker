@@ -112,6 +112,8 @@ function bindEvents(): void {
         break;
 
       case 'nav.garage':
+        render.errorMessage('', 'bike.add.submit');
+        if (dom.addBikeForm) dom.addBikeForm.reset();
         render.garageScreen();
         break;
 
@@ -135,7 +137,7 @@ function bindEvents(): void {
 
           await refreshBikes();
           addBikeForm.reset();
-          await render.garageScreen();
+          render.garageScreen();
         } catch (error) {
           error instanceof Error
             ? render.errorMessage(error.message, action)

@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import { UpsertMaintenanceBody } from '../types/maintenance';
 import {
+  isNonNegativeInteger,
+  isPositiveInteger,
+  isValidIsoLikeDate,
+  normalizeString,
+} from '../utils/validation';
+import {
   createMaintenance,
   findMaintenanceByBikeAndName,
   listMaintenanceByBikeId,
@@ -28,10 +34,52 @@ maintenanceRouter.get('/', async (req, res) => {
 
 maintenanceRouter.post('/upsert', async (req, res) => {
   const body = (req.body ?? {}) as UpsertMaintenanceBody;
-  const { bike_id, name, date, odo, interval_km, interval_days } = body;
+  const bike_id = normalizeString(body.bike_id);
+  const name = normalizeString(body.name);
+  const { date, odo, interval_km, interval_days } = body;
 
   if (!bike_id || !name) {
-    res.status(400).json({ error: 'bike id and name are required' });
+    res.status(400).json({ error: 'bike_id and name are required' });
+    return;
+  }
+
+  if (
+    date === undefined &&
+    odo === undefined &&
+    interval_km === undefined &&
+    interval_days === undefined
+  ) {
+    res
+      .status(400)
+      .json({ error: 'At least one maintenance field must be provided' });
+    return;
+  }
+
+  if (date !== undefined && date !== null && !isValidIsoLikeDate(date)) {
+    res.status(400).json({ error: 'Invalid date' });
+    return;
+  }
+
+  if (odo !== undefined && odo !== null && !isNonNegativeInteger(odo)) {
+    res.status(400).json({ error: 'Odo must be a non-negative integer' });
+    return;
+  }
+
+  if (
+    interval_km !== undefined &&
+    interval_km !== null &&
+    !isPositiveInteger(interval_km)
+  ) {
+    res.status(400).json({ error: 'interval_km must be a positive integer' });
+    return;
+  }
+
+  if (
+    interval_days !== undefined &&
+    interval_days !== null &&
+    !isPositiveInteger(interval_days)
+  ) {
+    res.status(400).json({ error: 'interval_days must be a positive integer' });
     return;
   }
 

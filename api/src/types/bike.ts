@@ -9,7 +9,7 @@ export type BikeRow = {
 };
 
 export type CreateBikeBody = {
-  userId?: string;
+  user_id?: string;
   make?: string;
   model?: string;
   year?: number;

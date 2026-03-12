@@ -3,9 +3,9 @@ import { ErrorResponse } from '../types/auth';
 
 export function sendAuthError(
   res: Response,
-  statusCode: number,
+  status_code: number,
   message: string,
 ): void {
   const body: ErrorResponse = { error: message };
-  res.status(statusCode).json(body);
+  res.status(status_code).json(body);
 }

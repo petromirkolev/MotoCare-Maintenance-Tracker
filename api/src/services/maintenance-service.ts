@@ -3,21 +3,21 @@ import { getAll, getOne, runQuery } from '../db-helpers';
 import { MaintenanceRow } from '../types/maintenance';
 
 export async function listMaintenanceByBikeId(
-  bikeId: string,
+  bike_id: string,
 ): Promise<MaintenanceRow[]> {
   return getAll<MaintenanceRow>(
     'SELECT * FROM maintenance WHERE bike_id = ? ORDER BY created_at DESC',
-    [bikeId],
+    [bike_id],
   );
 }
 
 export async function findMaintenanceByBikeAndName(
-  bikeId: string,
+  bike_id: string,
   name: string,
 ): Promise<MaintenanceRow | undefined> {
   return getOne<MaintenanceRow>(
     'SELECT * FROM maintenance WHERE bike_id = ? AND name = ?',
-    [bikeId, name],
+    [bike_id, name],
   );
 }
 

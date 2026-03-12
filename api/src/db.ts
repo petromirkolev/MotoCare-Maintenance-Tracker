@@ -8,8 +8,6 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
     return;
   }
 
-  console.log('Connected to SQLite');
-
   db.run(
     `CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
@@ -23,8 +21,6 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
         console.error('Failed to create users table:', tableErr.message);
         return;
       }
-
-      console.log('Users table is ready');
     },
   );
 
@@ -44,8 +40,6 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
         console.error('Failed to create bikes table:', tableErr.message);
         return;
       }
-
-      console.log('Bikes table is ready');
     },
   );
 
@@ -66,8 +60,6 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
         console.error('Failed to create maintenance table:', tableErr.message);
         return;
       }
-
-      console.log('Maintenance table is ready');
     },
   );
 
@@ -89,8 +81,6 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
         );
         return;
       }
-
-      console.log('Maintenance logs table is ready');
     },
   );
 });

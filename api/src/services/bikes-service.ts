@@ -3,7 +3,7 @@ import { getAll, getOne, runQuery } from '../db-helpers';
 import { BikeRow } from '../types/bike';
 
 export async function createBike(params: {
-  userId: string;
+  user_id: string;
   make: string;
   model: string;
   year: number;
@@ -16,7 +16,7 @@ export async function createBike(params: {
     `,
     [
       uuidv4(),
-      params.userId,
+      params.user_id,
       params.make,
       params.model,
       params.year,
@@ -30,16 +30,16 @@ export async function findBikeById(id: string): Promise<BikeRow | undefined> {
   return getOne<BikeRow>('SELECT * FROM bikes WHERE id = ?', [id]);
 }
 
-export async function listBikesByUserId(userId: string): Promise<BikeRow[]> {
+export async function listBikesByUserId(user_id: string): Promise<BikeRow[]> {
   return getAll<BikeRow>(
     'SELECT * FROM bikes WHERE user_id = ? ORDER BY created_at DESC',
-    [userId],
+    [user_id],
   );
 }
 
 export async function updateBike(params: {
   id: string;
-  userId: string;
+  user_id: string;
   make: string;
   model: string;
   year: number;
@@ -57,20 +57,20 @@ export async function updateBike(params: {
       params.year,
       params.odo,
       params.id,
-      params.userId,
+      params.user_id,
     ],
   );
 }
 
 export async function deleteBike(params: {
   id: string;
-  userId: string;
+  user_id: string;
 }): Promise<void> {
   await runQuery(
     `
       DELETE FROM bikes
       WHERE id = ? AND user_id = ?
     `,
-    [params.id, params.userId],
+    [params.id, params.user_id],
   );
 }

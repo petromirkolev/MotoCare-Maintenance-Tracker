@@ -16,6 +16,7 @@ import { AuthBody } from '../types/auth-body';
 import { sendAuthError } from '../utils/auth-response';
 import { sendLoginSuccess, sendRegisterSuccess } from '../utils/auth-success';
 import { getValidatedAuthBody } from '../utils/auth-validation';
+import { normalizeEmail, isValidEmail } from '../utils/validation';
 
 const authRouter = Router();
 
@@ -27,15 +28,18 @@ authRouter.post('/register', async (req, res) => {
     return;
   }
 
-  const { email, password } = validatedBody;
+  const email = normalizeEmail(validatedBody.email);
+  const password = validatedBody.password;
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const emailCheck = emailRegex.test(email);
+  if (!isValidEmail(email)) {
+    sendAuthError(res, 400, 'Invalid email format');
+    return;
+  }
 
-  if (!emailCheck) throw new Error('Invalid email format');
-
-  if (password.length < 8)
-    throw new Error('Password must be 8 characters at minimum');
+  if (password.length < 8) {
+    sendAuthError(res, 400, 'Password must be at least 8 characters');
+    return;
+  }
 
   try {
     const existingUser = await findUserByEmail(email);
@@ -61,7 +65,8 @@ authRouter.post('/login', async (req, res) => {
     return;
   }
 
-  const { email, password } = validatedBody;
+  const email = normalizeEmail(validatedBody.email);
+  const password = validatedBody.password;
 
   try {
     const user = await findUserByEmail(email);

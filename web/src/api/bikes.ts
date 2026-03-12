@@ -52,7 +52,7 @@ export async function createBikeApi(input: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      userId: currentUser.id,
+      user_id: currentUser.id,
       make: input.make,
       model: input.model,
       year: input.year,
@@ -100,7 +100,7 @@ export async function updateBikeApi(input: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        userId: currentUser.id,
+        user_id: currentUser.id,
         make: input.make,
         model: input.model,
         year: input.year,
