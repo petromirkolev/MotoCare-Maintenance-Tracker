@@ -5,6 +5,9 @@
 import { bindEvents } from './ui/router';
 import { render } from './dom/render';
 import { getCurrentUser } from './state/auth-state';
+import { initState } from './state/state-storage';
+
+await initState();
 
 const user = getCurrentUser();
 

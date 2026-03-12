@@ -1,6 +1,7 @@
 import express from 'express';
 import healthRouter from './routes/health';
 import authRouter from './routes/auth';
+import bikesRouter from './routes/bikes';
 import cors from 'cors';
 
 const app = express();
@@ -13,5 +14,6 @@ app.get('/', (_req, res) => {
 });
 app.use('/health', healthRouter);
 app.use('/auth', authRouter);
+app.use('/bikes', bikesRouter);
 
 export default app;

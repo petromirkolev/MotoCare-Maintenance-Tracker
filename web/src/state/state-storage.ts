@@ -1,10 +1,38 @@
 /* State storage for the application */
 
+import { fetchBikes } from '../api/bikes';
 import type { StoreState } from '../types/state';
 
 const STORAGE_KEY = 'motocare:v1:bikes';
 const listeners = new Set<() => void>();
-let state: StoreState = loadState();
+let state: StoreState = {
+  bikes: [],
+  maintenance: [],
+  maintenanceLog: [],
+};
+
+async function initState(): Promise<void> {
+  state = await loadState();
+}
+
+async function loadState(): Promise<StoreState> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const parsed = raw ? (JSON.parse(raw) as Partial<StoreState>) : {};
+
+    const bikes = await fetchBikes();
+
+    return {
+      bikes: Array.isArray(bikes) ? bikes : [],
+      maintenance: Array.isArray(parsed.maintenance) ? parsed.maintenance : [],
+      maintenanceLog: Array.isArray(parsed.maintenanceLog)
+        ? parsed.maintenanceLog
+        : [],
+    };
+  } catch {
+    return { bikes: [], maintenance: [], maintenanceLog: [] };
+  }
+}
 
 function getState(): StoreState {
   return state;
@@ -20,32 +48,21 @@ function updateState(updater: (prev: StoreState) => StoreState): void {
   notify();
 }
 
-function newId(): string {
-  return String(Date.now());
-}
-
-function loadState(): StoreState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      return { bikes: [], maintenance: [], maintenanceLog: [] };
-    }
-    const parsed = JSON.parse(raw) as Partial<StoreState>;
-
-    return {
-      bikes: Array.isArray(parsed.bikes) ? parsed.bikes : [],
-      maintenance: Array.isArray(parsed.maintenance) ? parsed.maintenance : [],
-      maintenanceLog: Array.isArray(parsed.maintenanceLog)
-        ? parsed.maintenanceLog
-        : [],
-    };
-  } catch {
-    return { bikes: [], maintenance: [], maintenanceLog: [] };
-  }
-}
-
 function saveState(state: StoreState) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+async function refreshBikes(): Promise<void> {
+  const bikes = await fetchBikes();
+
+  state = {
+    ...state,
+    bikes: Array.isArray(bikes) ? bikes : [],
+  };
+}
+
+function newId(): string {
+  return String(Date.now());
 }
 
 function notify() {
@@ -60,6 +77,7 @@ function subscribe(fn: () => void) {
 
 export {
   STORAGE_KEY,
+  initState,
   listeners,
   newId,
   loadState,
@@ -69,4 +87,5 @@ export {
   setState,
   getState,
   updateState,
+  refreshBikes,
 };

@@ -11,12 +11,11 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
   console.log('Connected to SQLite');
 
   db.run(
-    `
-      CREATE TABLE IF NOT EXISTS users (
-        id TEXT PRIMARY KEY,
-        email TEXT NOT NULL UNIQUE,
-        password_hash TEXT NOT NULL,
-        created_at TEXT NOT NULL
+    `CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      created_at TEXT NOT NULL
       )
     `,
     (tableErr) => {
@@ -26,6 +25,27 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
       }
 
       console.log('Users table is ready');
+    },
+  );
+
+  db.run(
+    `CREATE TABLE IF NOT EXISTS bikes (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      make TEXT NOT NULL,
+      model TEXT NOT NULL,
+      year INTEGER NOT NULL,
+      odo INTEGER NOT NULL,
+      created_at TEXT NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES users(id))
+      `,
+    (tableErr) => {
+      if (tableErr) {
+        console.error('Failed to create bikes table:', tableErr.message);
+        return;
+      }
+
+      console.log('Bikes table is ready');
     },
   );
 });
