@@ -4,9 +4,9 @@
  */
 
 import { dom } from './selectors';
-import { bikeStore } from '../state/bike-store';
-import { createBikeCard } from '../ui/createBikeCard';
-import { showScreen } from '../ui/showScreen';
+import { getState } from '../state/state-storage';
+import { createBikeCard } from '../ui/create-bike-card';
+import { showScreen } from '../ui/show-screen';
 import { req } from '../utils/dom-helper';
 import { getCurrentUser } from '../state/auth-state';
 
@@ -28,7 +28,8 @@ export const render = {
 
     grid.innerHTML = '';
 
-    const bikes = bikeStore.getBikes();
+    const state = getState();
+    const bikes = state.bikes;
     const currentUser = getCurrentUser();
 
     req(dom.userEmail, 'userEmail').textContent =

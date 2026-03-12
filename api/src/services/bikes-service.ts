@@ -36,3 +36,41 @@ export async function listBikesByUserId(userId: string): Promise<BikeRow[]> {
     [userId],
   );
 }
+
+export async function updateBike(params: {
+  id: string;
+  userId: string;
+  make: string;
+  model: string;
+  year: number;
+  odo: number;
+}): Promise<void> {
+  await runQuery(
+    `
+      UPDATE bikes
+      SET make = ?, model = ?, year = ?, odo = ?
+      WHERE id = ? AND user_id = ?
+    `,
+    [
+      params.make,
+      params.model,
+      params.year,
+      params.odo,
+      params.id,
+      params.userId,
+    ],
+  );
+}
+
+export async function deleteBike(params: {
+  id: string;
+  userId: string;
+}): Promise<void> {
+  await runQuery(
+    `
+      DELETE FROM bikes
+      WHERE id = ? AND user_id = ?
+    `,
+    [params.id, params.userId],
+  );
+}

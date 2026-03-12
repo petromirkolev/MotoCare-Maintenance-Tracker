@@ -5,6 +5,7 @@ import { render } from '../dom/render';
 import { dom } from '../dom/selectors';
 import { req } from '../utils/dom-helper';
 import { bikeStore, readBikeForm } from '../state/bike-store';
+import { createBikeApi, updateBikeApi, deleteBikeApi } from '../api/bikes';
 import { appState } from '../types/state';
 import {
   getMaintenanceTask,
@@ -18,6 +19,7 @@ import {
   setCurrentUser,
 } from '../state/auth-state';
 import { loginUser, registerUser } from '../api/auth';
+import { refreshBikes } from '../state/state-storage';
 
 type Action =
   | 'auth.login'
@@ -118,13 +120,22 @@ function bindEvents(): void {
         break;
 
       case 'bike.add.submit': {
+        const addBikeForm = (dom.addBikeForm as HTMLFormElement) || null;
+        if (!addBikeForm) throw new Error('Missing add bike form');
+
         try {
-          const addBikeForm = (dom.addBikeForm as HTMLFormElement) || null;
           const input = readBikeForm(addBikeForm);
 
-          bikeStore.addBike(input);
+          await createBikeApi({
+            make: input.make,
+            model: input.model,
+            year: Number(input.year),
+            odo: Number(input.odo),
+          });
+
+          await refreshBikes();
           addBikeForm.reset();
-          render.garageScreen();
+          await render.garageScreen();
         } catch (error) {
           error instanceof Error
             ? render.errorMessage(error.message, action)
@@ -140,7 +151,8 @@ function bindEvents(): void {
 
           if (!id) break;
 
-          bikeStore.deleteBike(id);
+          await deleteBikeApi(id);
+          await refreshBikes();
           render.garageScreen();
         } catch (error) {
           console.error(error);
@@ -169,7 +181,6 @@ function bindEvents(): void {
         }
 
         editId.value = appState.selectedBikeId;
-
         editMake.value = appState.selectedBikeFound.make;
         editYear.value = String(appState.selectedBikeFound.year);
         editModel.value = appState.selectedBikeFound.model;
@@ -187,7 +198,16 @@ function bindEvents(): void {
 
         try {
           const form = readBikeForm(bikeEditForm);
-          bikeStore.updateBike(id, form);
+
+          await updateBikeApi({
+            id,
+            make: form.make,
+            model: form.model,
+            year: Number(form.year),
+            odo: Number(form.odo),
+          });
+
+          await refreshBikes();
           bikeEditForm.reset();
           render.errorMessage('', action);
           render.garageScreen();

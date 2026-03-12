@@ -11,7 +11,7 @@ let state: StoreState = {
   maintenanceLog: [],
 };
 
-export async function initState(): Promise<void> {
+async function initState(): Promise<void> {
   state = await loadState();
 }
 
@@ -48,12 +48,21 @@ function updateState(updater: (prev: StoreState) => StoreState): void {
   notify();
 }
 
-function newId(): string {
-  return String(Date.now());
-}
-
 function saveState(state: StoreState) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+async function refreshBikes(): Promise<void> {
+  const bikes = await fetchBikes();
+
+  state = {
+    ...state,
+    bikes: Array.isArray(bikes) ? bikes : [],
+  };
+}
+
+function newId(): string {
+  return String(Date.now());
 }
 
 function notify() {
@@ -68,6 +77,7 @@ function subscribe(fn: () => void) {
 
 export {
   STORAGE_KEY,
+  initState,
   listeners,
   newId,
   loadState,
@@ -77,4 +87,5 @@ export {
   setState,
   getState,
   updateState,
+  refreshBikes,
 };

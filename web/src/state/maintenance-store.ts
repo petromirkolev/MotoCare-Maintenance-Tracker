@@ -9,12 +9,12 @@ import type {
   MaintenanceScheduleInput,
   MaintenanceSchedulePatch,
 } from '../types/maintenance';
-import type { MaintenanceLog } from '../types/maintenanceLog';
+import type { MaintenanceLog } from '../types/maintenance-log';
 import { getState, updateState, newId } from './state-storage';
 import { bikeStore } from './bike-store';
 import { appState } from '../types/state';
 import { checkDueStatus } from '../utils/service-due-helper';
-import { checkOverdueStatus } from '../utils/serviceOverdueHelper';
+import { checkOverdueStatus } from '../utils/service-overdue-helper';
 import { checkServiceItemsStatus } from '../utils/service-items-helper';
 import { markDueTasks, markOverdueTasks } from '../utils/dom-helper';
 

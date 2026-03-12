@@ -1,4 +1,5 @@
 import { getCurrentUser } from '../state/auth-state';
+import { bikeStore } from '../state/bike-store';
 
 export type BikeDto = {
   id: string;
@@ -77,4 +78,76 @@ export async function createBikeApi(input: {
   }
 
   return data as CreateBikeResponse;
+}
+
+export async function updateBikeApi(input: {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  odo: number;
+}): Promise<{ message: string }> {
+  const currentUser = getCurrentUser();
+  if (!currentUser) {
+    throw new Error('No logged-in user');
+  }
+
+  const currentBike = bikeStore.getBike(input.id);
+  if (!currentBike) throw new Error('Bike not found');
+
+  if (input.year !== undefined && (input.year < 1900 || input.year > 2100)) {
+    throw new Error('Invalid year');
+  }
+
+  if (input.odo !== undefined && input.odo < currentBike.odo) {
+    throw new Error('Odometer cannot decrease');
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL}/bikes/${encodeURIComponent(input.id)}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: currentUser.id,
+        make: input.make,
+        model: input.model,
+        year: input.year,
+        odo: input.odo,
+      }),
+    },
+  );
+
+  const data = (await response.json()) as { message: string } | ErrorResponse;
+
+  if (!response.ok) {
+    throw new Error('error' in data ? data.error : 'Failed to update bike');
+  }
+
+  return data as { message: string };
+}
+
+export async function deleteBikeApi(id: string): Promise<{ message: string }> {
+  const currentUser = getCurrentUser();
+
+  if (!currentUser) {
+    throw new Error('No logged-in user');
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL}/bikes/${encodeURIComponent(id)}?userId=${encodeURIComponent(currentUser.id)}`,
+    {
+      method: 'DELETE',
+    },
+  );
+
+  const data = (await response.json()) as { message: string } | ErrorResponse;
+
+  if (!response.ok) {
+    throw new Error('error' in data ? data.error : 'Failed to delete bike');
+  }
+
+  return data as { message: string };
 }
