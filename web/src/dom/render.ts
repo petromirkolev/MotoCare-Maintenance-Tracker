@@ -1,11 +1,11 @@
 /* Functions responsible for rendering the UI based on the current state of the application. These functions manipulate the DOM to display the appropriate screens and content to the user. */
 
 import { dom } from './selectors';
-import { getState } from '../state/state-storage';
+import { getState } from '../state/state-store';
 import { createBikeCard } from '../ui/create-bike-card';
 import { showScreen } from '../ui/show-screen';
 import { req } from '../utils/dom-helper';
-import { getCurrentUser } from '../state/auth-state';
+import { getCurrentUser } from '../state/auth-store';
 
 export const render = {
   initialScreen(): void {

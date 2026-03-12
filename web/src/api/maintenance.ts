@@ -1,25 +1,11 @@
-export type MaintenanceDto = {
-  id: string;
-  bike_id: string;
-  name: string;
-  date: string | null;
-  odo: number | null;
-  interval_km: number | null;
-  interval_days: number | null;
-  created_at: string;
-};
+/* This file contains functions for managing maintenance records, including fetching and upserting maintenance records. */
 
-export type ListMaintenanceResponse = {
-  maintenance: MaintenanceDto[];
-};
-
-export type UpsertMaintenanceResponse = {
-  message: string;
-};
-
-export type ErrorResponse = {
-  error: string;
-};
+import type {
+  MaintenanceDto,
+  ListMaintenanceResponse,
+  ErrorResponse,
+  UpsertMaintenanceResponse,
+} from '../types/maintenance';
 
 const API_BASE_URL = 'http://localhost:3001';
 

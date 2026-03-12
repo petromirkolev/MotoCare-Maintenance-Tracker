@@ -1,11 +1,9 @@
-/* Entry point for the Motorcycle Maintenance Assistant web application.
- * Initializes the application by rendering the initial screen and binding event listeners.
- */
+/* Entry point for the Motorcycle Maintenance Assistant web application. */
 
 import { bindEvents } from './ui/router';
 import { render } from './dom/render';
-import { getCurrentUser } from './state/auth-state';
-import { initState } from './state/state-storage';
+import { getCurrentUser } from './state/auth-store';
+import { initState } from './state/state-store';
 
 await initState();
 

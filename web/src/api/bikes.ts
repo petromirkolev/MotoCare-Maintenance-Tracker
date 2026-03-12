@@ -1,4 +1,6 @@
-import { getCurrentUser } from '../state/auth-state';
+/* This file contains functions for managing bikes, including fetching, creating, updating, and deleting bikes. */
+
+import { getCurrentUser } from '../state/auth-store';
 import { bikeStore } from '../state/bike-store';
 import type {
   Bike,
@@ -37,9 +39,12 @@ export async function createBikeApi(input: {
 }): Promise<CreateBikeResponse> {
   const currentUser = getCurrentUser();
 
-  if (!currentUser) {
-    throw new Error('No logged-in user');
-  }
+  if (!currentUser) throw new Error('No logged-in user');
+
+  if (input.year !== undefined && (input.year < 1900 || input.year > 2100))
+    throw new Error('Invalid year');
+
+  if (input.odo < 0) throw new Error('Invalid odo');
 
   const response = await fetch(`${API_BASE_URL}/bikes`, {
     method: 'POST',

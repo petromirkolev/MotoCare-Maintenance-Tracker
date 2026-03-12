@@ -1,4 +1,4 @@
-/* Helper functions for checking the status of service items */
+/* Helper functions for checking the status of service items. */
 
 import type { Maintenance } from '../types/maintenance';
 

@@ -1,5 +1,4 @@
-/* Helper functions for DOM manipulation related to the motorcycle maintenance assistant application.
- */
+/* Helper functions for DOM manipulation related to the motorcycle maintenance assistant application. */
 
 import type { Maintenance } from '../types/maintenance';
 

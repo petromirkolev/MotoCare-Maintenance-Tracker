@@ -31,7 +31,7 @@ maintenanceRouter.post('/upsert', async (req, res) => {
   const { bike_id, name, date, odo, interval_km, interval_days } = body;
 
   if (!bike_id || !name) {
-    res.status(400).json({ error: 'bikeId and name are required' });
+    res.status(400).json({ error: 'bike id and name are required' });
     return;
   }
 

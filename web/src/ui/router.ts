@@ -7,14 +7,19 @@ import { bikeStore, readBikeForm } from '../state/bike-store';
 import { createBikeApi, updateBikeApi, deleteBikeApi } from '../api/bikes';
 import { appState } from '../types/state';
 import { maintenanceStore } from '../state/maintenance-store';
-import { refreshMaintenance, refreshBikes } from '../state/state-storage';
 import { upsertMaintenanceApi } from '../api/maintenance';
 import { loginUser, registerUser } from '../api/auth';
+import { createMaintenanceLogApi } from '../api/maintenance-logs';
+import {
+  refreshMaintenance,
+  refreshBikes,
+  refreshMaintenanceLogs,
+} from '../state/state-store';
 import {
   readLoginForm,
   readRegForm,
   setCurrentUser,
-} from '../state/auth-state';
+} from '../state/auth-store';
 
 type Action =
   | 'auth.login'
@@ -240,6 +245,7 @@ function bindEvents(): void {
         );
 
         await refreshMaintenance(appState.selectedBikeId);
+        await refreshMaintenanceLogs(appState.selectedBikeId);
 
         maintenanceStore.updateTaskInfo(appState.selectedBikeId);
         maintenanceStore.updateOverallProgress(dom);
@@ -285,7 +291,15 @@ function bindEvents(): void {
             interval_days: existingTask?.interval_days ?? null,
           });
 
+          await createMaintenanceLogApi({
+            bike_id,
+            name: currentTask,
+            date: input.date,
+            odo: Number(input.odo),
+          });
+
           await refreshMaintenance(bike_id);
+          await refreshMaintenanceLogs(bike_id);
 
           maintenanceStore.updateTaskInfo(bike_id);
           maintenanceStore.updateOverallProgress(dom);

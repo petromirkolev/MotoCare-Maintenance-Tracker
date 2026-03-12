@@ -1,7 +1,8 @@
-/* State storage for the application */
+/* State store for the application */
 
 import { fetchBikes } from '../api/bikes';
 import { fetchMaintenanceByBikeId } from '../api/maintenance';
+import { fetchMaintenanceLogsByBikeId } from '../api/maintenance-logs';
 import type { StoreState } from '../types/state';
 
 const STORAGE_KEY = 'motocare:v1:bikes';
@@ -71,6 +72,15 @@ async function refreshMaintenance(bikeId: string): Promise<void> {
   };
 }
 
+async function refreshMaintenanceLogs(bikeId: string): Promise<void> {
+  const maintenanceLog = await fetchMaintenanceLogsByBikeId(bikeId);
+
+  state = {
+    ...state,
+    maintenanceLog: Array.isArray(maintenanceLog) ? maintenanceLog : [],
+  };
+}
+
 function newId(): string {
   return String(Date.now());
 }
@@ -99,4 +109,5 @@ export {
   updateState,
   refreshBikes,
   refreshMaintenance,
+  refreshMaintenanceLogs,
 };

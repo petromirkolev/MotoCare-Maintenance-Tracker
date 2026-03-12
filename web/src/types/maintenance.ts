@@ -20,10 +20,25 @@ export type MaintenanceScheduleInput = {
   interval_km: number | null;
 };
 
-export type MaintenanceLogPatch = Partial<
-  Omit<Maintenance, 'id' | 'bikeId' | 'name'>
->;
+export type MaintenanceDto = {
+  id: string;
+  bike_id: string;
+  name: string;
+  date: string | null;
+  odo: number | null;
+  interval_km: number | null;
+  interval_days: number | null;
+  created_at: string;
+};
 
-export type MaintenanceSchedulePatch = Partial<
-  Omit<Maintenance, 'id' | 'bikeId' | 'name' | 'odo' | 'date'>
->;
+export type ListMaintenanceResponse = {
+  maintenance: MaintenanceDto[];
+};
+
+export type UpsertMaintenanceResponse = {
+  message: string;
+};
+
+export type ErrorResponse = {
+  error: string;
+};

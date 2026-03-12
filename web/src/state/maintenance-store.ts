@@ -5,7 +5,7 @@ import type {
   MaintenanceLogInput,
   MaintenanceScheduleInput,
 } from '../types/maintenance';
-import { getState } from './state-storage';
+import { getState } from './state-store';
 import { appState } from '../types/state';
 import { checkDueStatus } from '../utils/service-due-helper';
 import { checkOverdueStatus } from '../utils/service-overdue-helper';
@@ -19,9 +19,10 @@ export const maintenanceStore = {
     const date: string = String(fd.get('doneAt') ?? '').trim();
     const odoRaw: string = String(fd.get('odo') ?? '').trim();
     const odo = Number(odoRaw);
+    console.log(odo);
 
     if (!date) throw new Error('Date is required');
-    if (!odo) throw new Error('Odo is required');
+    if (odo === null || odo === undefined) throw new Error('Odo is required');
 
     return { date, odo };
   },
@@ -69,8 +70,15 @@ export const maintenanceStore = {
         return;
       }
 
+      const date = task.date ? new Date(task.date) : null;
+      const formatted = date?.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
+
       if (task.date && task.odo !== null) {
-        lastVal.textContent = `On ${task.date} at ${task.odo} km.`;
+        lastVal.textContent = `${formatted} at ${task.odo} km.`;
       } else {
         lastVal.textContent = 'Never logged';
       }
@@ -93,7 +101,14 @@ export const maintenanceStore = {
       if (task.interval_days) {
         const nextDate = new Date(task.date);
         nextDate.setDate(nextDate.getDate() + Number(task.interval_days));
-        dueParts.push(`On ${nextDate.toISOString().slice(0, 10)}`);
+
+        const formattedDate = nextDate.toLocaleDateString('en-US', {
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        });
+
+        dueParts.push(`${formattedDate}`);
       }
 
       if (task.interval_km) {
@@ -128,18 +143,26 @@ export const maintenanceStore = {
       checkOverdueStatus(item, selectedBike, today),
     );
 
-    /** Update "Recent History"
-     * - If there are maintenance logs, show the most recent one with its date and odo.
-     * - If there are no logs, show a message encouraging the user to log their first service.
-     */
+    /* Update "Recent History" */
     if (lastServicedItem !== undefined) {
       dom.maintenanceHistory.querySelector('.empty__title').textContent =
         lastServicedItem.name
           ?.split('-')
           .map((a) => a.toUpperCase())
           .join(' ');
+
+      const date = lastServicedItem.date
+        ? new Date(lastServicedItem.date)
+        : null;
+
+      const formatted = date?.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      });
+
       dom.maintenanceHistory.querySelector('.empty__sub').textContent =
-        `Done on ${lastServicedItem.date} @ ${lastServicedItem.odo} km.`;
+        `Done on ${formatted} at ${lastServicedItem.odo} km.`;
     } else {
       dom.maintenanceHistory.querySelector('.empty__title').textContent =
         'No service history yet';

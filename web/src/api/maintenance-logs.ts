@@ -1,0 +1,57 @@
+/* This file contains functions for managing maintenance logs, including fetching and creating maintenance logs. */
+
+import type {
+  MaintenanceLogDto,
+  ListMaintenanceLogsResponse,
+  ErrorResponse,
+  CreateMaintenanceLogResponse,
+} from '../types/maintenance-log';
+
+const API_BASE_URL = 'http://localhost:3001';
+
+export async function fetchMaintenanceLogsByBikeId(
+  bikeId: string,
+): Promise<MaintenanceLogDto[]> {
+  const response = await fetch(
+    `${API_BASE_URL}/maintenance-logs?bikeId=${encodeURIComponent(bikeId)}`,
+  );
+
+  const data = (await response.json()) as
+    | ListMaintenanceLogsResponse
+    | ErrorResponse;
+
+  if (!response.ok) {
+    throw new Error(
+      'error' in data ? data.error : 'Failed to fetch maintenance logs',
+    );
+  }
+
+  return (data as ListMaintenanceLogsResponse).logs;
+}
+
+export async function createMaintenanceLogApi(input: {
+  bike_id: string;
+  name: string;
+  date: string | null;
+  odo: number;
+}): Promise<CreateMaintenanceLogResponse> {
+  const response = await fetch(`${API_BASE_URL}/maintenance-logs`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(input),
+  });
+
+  const data = (await response.json()) as
+    | CreateMaintenanceLogResponse
+    | ErrorResponse;
+
+  if (!response.ok) {
+    throw new Error(
+      'error' in data ? data.error : 'Failed to create maintenance log',
+    );
+  }
+
+  return data as CreateMaintenanceLogResponse;
+}

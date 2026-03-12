@@ -29,6 +29,14 @@ authRouter.post('/register', async (req, res) => {
 
   const { email, password } = validatedBody;
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailCheck = emailRegex.test(email);
+
+  if (!emailCheck) throw new Error('Invalid email format');
+
+  if (password.length < 8)
+    throw new Error('Password must be 8 characters at minimum');
+
   try {
     const existingUser = await findUserByEmail(email);
 

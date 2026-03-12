@@ -1,3 +1,5 @@
+/* This file contains functions for user authentication, including registration and login. */
+
 import type {
   RegisterResponse,
   ErrorResponse,
