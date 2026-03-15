@@ -73,6 +73,7 @@ export class GaragePage {
     year,
     odometer,
   }): Promise<void> {
+    await this.editBikeButton.click();
     await this.editBikeMake.fill(make);
     await this.editBikeModel.fill(model);
     await this.editBikeYear.fill(year);

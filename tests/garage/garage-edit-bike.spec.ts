@@ -43,7 +43,20 @@ test.describe('Garage edit bike test suite', () => {
     await garagePage.expectBikeVisible(bike.make);
   });
 
-  test('Edit bike with valid data updates the bike', async () => {});
+  test('Edit bike with valid data updates the bike', async ({ page }) => {
+    const bikeName = await page.locator('.bikeCard__name').innerText();
+
+    await garagePage.fillAndSubmitBikeEditForm({
+      make: 'Yamaha',
+      model: 'Tracer 9GT',
+      year: '2022',
+      odometer: '1100',
+    });
+    await expect(garagePage.garageGrid).toBeVisible();
+    await expect(garagePage.editBikeScreen).not.toBeVisible();
+    await garagePage.expectBikeVisible('Yamaha');
+    await garagePage.expectBikeNotVisible(bikeName);
+  });
 
   test('Cancel edit bike does not change bike data', async () => {});
 });
