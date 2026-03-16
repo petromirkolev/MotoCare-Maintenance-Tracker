@@ -44,13 +44,13 @@ test.describe('Maintenance schedule test suite', () => {
 
   test('Maintenance schedule modal is opening', async () => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
   });
 
   test('Maintenance schedule with valid days and kilometers saves and shows in UI', async () => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule(days, km);
@@ -67,7 +67,7 @@ test.describe('Maintenance schedule test suite', () => {
 
   test('Maintenance schedule with missing days is rejected', async () => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule('', km);
@@ -78,7 +78,7 @@ test.describe('Maintenance schedule test suite', () => {
 
   test('Maintenance schedule with missing kilometers is rejected', async () => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule(days, '');
@@ -91,7 +91,7 @@ test.describe('Maintenance schedule test suite', () => {
 
   test('Maintenance schedule with missing days and kilometers is rejected', async () => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule('', '');
@@ -102,7 +102,7 @@ test.describe('Maintenance schedule test suite', () => {
 
   test('Maintenance schedule with 0 days is rejected', async () => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule('0', km);
@@ -115,7 +115,7 @@ test.describe('Maintenance schedule test suite', () => {
 
   test('Maintenance schedule with 0 kilometers is rejected', async () => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule(days, '0');
@@ -128,7 +128,7 @@ test.describe('Maintenance schedule test suite', () => {
 
   test('Maintenance schedule with negative kilometers is rejected', async () => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule(days, '-100');
@@ -140,7 +140,7 @@ test.describe('Maintenance schedule test suite', () => {
 
   test('Maintenance schedule with negative days is rejected', async () => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule('-100', km);
@@ -152,7 +152,7 @@ test.describe('Maintenance schedule test suite', () => {
 
   test('Canceling maintenance schedule does not change UI', async () => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule(days, km);
@@ -171,7 +171,7 @@ test.describe('Maintenance schedule test suite', () => {
     page,
   }) => {
     await maintenancePage.goto();
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule(days, km);
@@ -197,6 +197,33 @@ test.describe('Maintenance schedule test suite', () => {
     ).toContainText('1000');
   });
 
+  test('Scheduling one maintenance log does not replace another log', async () => {
+    await maintenancePage.goto();
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
+    await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
+
+    await maintenancePage.fillMaintenanceSchedule(days, km);
+    await maintenancePage.saveMaintenanceSchedule();
+
+    await expect(
+      maintenancePage.oilServiceCard.locator('[data-field="due"]'),
+    ).toContainText('Every 100 days or 1000 km');
+
+    await maintenancePage.openMaintenanceScheduleModal('coolant-change');
+    await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
+
+    await maintenancePage.fillMaintenanceSchedule('400', '10000');
+    await maintenancePage.saveMaintenanceSchedule();
+
+    await expect(
+      maintenancePage.oilServiceCard.locator('[data-field="due"]'),
+    ).toContainText('Every 100 days or 1000 km');
+
+    await expect(
+      maintenancePage.coolantServiceCard.locator('[data-field="due"]'),
+    ).toContainText('Every 400 days or 10000 km');
+  });
+
   test('Scheduling maintenance for bike A does not affect bike B', async ({
     page,
   }) => {
@@ -211,7 +238,7 @@ test.describe('Maintenance schedule test suite', () => {
 
     await bikeCard.click();
 
-    await maintenancePage.openMaintenanceScheduleModal('oil-service');
+    await maintenancePage.openMaintenanceScheduleModal('oil-change');
     await expect(maintenancePage.maintenanceScheduleModal).toBeVisible();
 
     await maintenancePage.fillMaintenanceSchedule(days, km);

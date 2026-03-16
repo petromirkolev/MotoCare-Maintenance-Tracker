@@ -8,12 +8,15 @@ export class MaintenancePage {
   readonly maintenanceLogModal: Locator;
   readonly oilServiceCard: Locator;
   readonly logOilService: Locator;
+  readonly coolantServiceCard: Locator;
+  readonly logCoolantService: Locator;
   readonly logIntervalDoneAt: Locator;
   readonly logIntervalOdo: Locator;
   readonly logSubmitButton: Locator;
   readonly logCancelButton: Locator;
   readonly logServiceMessage: Locator;
   readonly scheduleOilService: Locator;
+  readonly scheduleCoolantService: Locator;
   readonly scheduleIntervalKm: Locator;
   readonly scheduleIntervalDays: Locator;
   readonly scheduleSubmitButton: Locator;
@@ -30,6 +33,10 @@ export class MaintenancePage {
     this.logOilService = this.page.locator(
       '[data-testid="task-card-oil"] [data-testid="btn-log-service-oil"]',
     );
+    this.coolantServiceCard = this.page.getByTestId('task-card-coolant');
+    this.logCoolantService = this.page.locator(
+      '[data-testid="task-card-coolant"] [data-testid="btn-log-service-coolant"]',
+    );
     this.logIntervalDoneAt = this.page.getByTestId('log-doneAt');
     this.logIntervalOdo = this.page.getByTestId('log-odo');
     this.logSubmitButton = this.page.getByTestId('log-submit');
@@ -37,6 +44,9 @@ export class MaintenancePage {
     this.logServiceMessage = this.page.getByTestId('log-hint');
     this.scheduleOilService = this.page.locator(
       '[data-testid="task-card-oil"] [data-testid="btn-task-calendar-oil"]',
+    );
+    this.scheduleCoolantService = this.page.locator(
+      '[data-testid="task-card-coolant"] [data-testid="btn-task-calendar-coolant"]',
     );
     this.scheduleIntervalKm = this.page.getByTestId('schedule-interval-km');
     this.scheduleIntervalDays = this.page.getByTestId('schedule-interval-days');
@@ -52,13 +62,16 @@ export class MaintenancePage {
 
   async openMaintenanceLogModal(service: string): Promise<void> {
     switch (service) {
-      case 'oil-service':
+      case 'oil-change':
         await this.logOilService.click();
+        break;
+      case 'coolant-change':
+        await this.logCoolantService.click();
         break;
     }
   }
 
-  async fillMaintenanceLog(doneAt: string, odo: string): Promise<void> {
+  async fillMaintenanceLog(doneAt: any, odo: any): Promise<void> {
     await this.logIntervalDoneAt.fill(doneAt);
     await this.logIntervalOdo.fill(odo);
   }
@@ -73,8 +86,11 @@ export class MaintenancePage {
 
   async openMaintenanceScheduleModal(service: string): Promise<void> {
     switch (service) {
-      case 'oil-service':
+      case 'oil-change':
         await this.scheduleOilService.click();
+        break;
+      case 'coolant-change':
+        await this.scheduleCoolantService.click();
         break;
     }
   }

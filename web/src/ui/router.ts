@@ -282,6 +282,16 @@ function bindEvents(): void {
             currentTask,
           );
 
+          if (
+            input.date === '' ||
+            input.date === null ||
+            input.date === undefined
+          )
+            throw new Error('Date is required');
+
+          if (Number(input.odo) < 0)
+            throw new Error('Odo must be a positive number');
+
           await upsertMaintenanceApi({
             bike_id,
             name: currentTask,
