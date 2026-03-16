@@ -54,3 +54,12 @@ export const invalidPasswordInput = {
 export function uniqueEmail(prefix = 'motocare'): string {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10000)}@example.com`;
 }
+
+export function makeBike() {
+  return {
+    make: `Test Bike ${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+    model: 'Tracer 9 GT',
+    year: '2021',
+    odometer: '1000',
+  };
+}

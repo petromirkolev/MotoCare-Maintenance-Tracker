@@ -88,6 +88,10 @@ export async function updateBikeApi(input: {
     throw new Error('Invalid year');
   }
 
+  if (input.odo === 0) {
+    throw new Error('Odometer is required');
+  }
+
   if (input.odo !== undefined && input.odo < currentBike.odo) {
     throw new Error('Odometer cannot decrease');
   }
