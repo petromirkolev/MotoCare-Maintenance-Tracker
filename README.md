@@ -68,6 +68,7 @@ Users can:
 - **Frontend:** Vite + Vanilla TypeScript
 - **Backend:** Node.js + Express + TypeScript
 - **Database:** SQLite
+- **Containerization:** Docker + Docker Compose
 - **Testing:** Playwright
 - **CI:** GitHub Actions
 
@@ -210,6 +211,32 @@ npm run dev
 ```
 
 Then open the Vite URL shown in the terminal.
+
+## Run with Docker
+
+This project can be run with Docker Compose.
+
+### Start the full stack
+
+```bash
+docker compose up --build
+```
+
+App URLs
+
+- Frontend: http://localhost:4173
+- API: http://localhost:3001
+
+### Stop the containers
+
+```bash
+docker compose down
+```
+
+### Notes
+
+- SQLite data is persisted through the ./api/data folder.
+- The API and frontend are containerized separately and run together through Docker Compose.
 
 ## Root test harness
 
