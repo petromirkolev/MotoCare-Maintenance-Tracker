@@ -24,6 +24,8 @@ MotoCare is not a static demo. It demonstrates work across the full app stack:
 - Input validation for email and password
 - Per-user data isolation
 
+![MotoCare login flow](docs/login.gif)
+
 ### Garage
 
 - Add motorcycles
@@ -34,6 +36,8 @@ MotoCare is not a static demo. It demonstrates work across the full app stack:
 - Validate year and odometer rules
 - Keep garage data isolated per user
 - Prevent invalid bike data through frontend + backend validation
+
+![MotoCare add bike flow](docs/add-bike.gif)
 
 ### Maintenance
 
@@ -48,6 +52,8 @@ Users can:
   - **On Track**
   - **Due Soon**
   - **Overdue**
+
+  ![MotoCare add maintenance flow](docs/add-maintenance.gif)
 
 ### Maintenance history and status
 
