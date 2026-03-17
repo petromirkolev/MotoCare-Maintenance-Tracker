@@ -8,3 +8,27 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Build output
+dist/
+web/dist/
+api/dist/
+
+# Dependencies
+api/node_modules/
+web/node_modules/
+
+# Environment files
+.env
+api/.env
+web/.env
+
+# SQLite / local database files
+api/data/*.sqlite
+api/data/*.sqlite-journal
+api/data/*.sqlite-shm
+api/data/*.sqlite-wal
+api/data/*.db
+api/data/*.db-journal
+api/data/*.db-shm
+api/data/*.db-wal
