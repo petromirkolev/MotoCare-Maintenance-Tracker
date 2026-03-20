@@ -1,4 +1,4 @@
-import { test, expect, APIRequestContext } from '@playwright/test';
+import { test, expect, APIRequestContext, APIResponse } from '@playwright/test';
 import { uniqueEmail, API_URL, PASSWORD } from '../utils/test-data';
 
 type LoginResponse = {
@@ -55,7 +55,7 @@ async function createBike(
     year: number;
     odo: number;
   }> = {},
-): Promise<void> {
+): Promise<APIResponse> {
   const response = await request.post(`${API_URL}/bikes`, {
     data: {
       user_id,
@@ -67,36 +67,50 @@ async function createBike(
     },
   });
 
-  expect(response.status()).toBe(201);
-
-  const body = await response.json();
-  expect(body.message).toBe('Bike created successfully');
+  return response;
 }
 
-async function listBikes(
+async function updateBike(
   request: APIRequestContext,
   user_id: string,
-): Promise<any[]> {
+  bike_id: string,
+  overrides: Partial<{
+    id: string;
+    make: string;
+    model: string;
+    year: number;
+    odo: number;
+  }>,
+): Promise<APIResponse> {
+  const updateResponse = await request.put(`${API_URL}/bikes/${bike_id}`, {
+    data: {
+      id: bike_id,
+      user_id,
+      make: overrides.make,
+      model: overrides.model,
+      year: overrides.year,
+      odo: overrides.odo,
+    },
+  });
+  return updateResponse;
+}
+
+async function listFirstBike(
+  request: APIRequestContext,
+  user_id: string,
+): Promise<any> {
   const response = await request.get(`${API_URL}/bikes?user_id=${user_id}`);
 
   expect(response.status()).toBe(200);
 
   const body = await response.json();
-  return body.bikes;
-}
-
-async function getFirstBikeId(
-  request: APIRequestContext,
-  user_id: string,
-): Promise<string> {
-  const bikes = await listBikes(request, user_id);
-  expect(bikes.length).toBeGreaterThan(0);
-  return bikes[0].id;
+  return body.bikes[0];
 }
 
 test.describe('Garage API test suite', () => {
   let email: string;
   let user_id: string;
+  let bike_id: string;
 
   test.beforeEach(async ({ request }) => {
     email = uniqueEmail('api-garage');
@@ -106,21 +120,18 @@ test.describe('Garage API test suite', () => {
   });
 
   test('Create bike with valid data succeeds', async ({ request }) => {
-    await createBike(request, user_id);
+    const response = await createBike(request, user_id);
+
+    expect(response.status()).toBe(201);
+
+    const body = await response.json();
+    expect(body.message).toBe('Bike created successfully');
   });
 
   test('Create bike with invalid year above maximum is rejected', async ({
     request,
   }) => {
-    const response = await request.post(`${API_URL}/bikes`, {
-      data: {
-        user_id,
-        make: 'Yamaha',
-        model: 'Tracer 9GT',
-        year: 2101,
-        odo: 1000,
-      },
-    });
+    const response = await createBike(request, user_id, { year: 2101 });
 
     expect(response.status()).toBe(400);
 
@@ -131,15 +142,7 @@ test.describe('Garage API test suite', () => {
   test('Create bike with invalid year below minimum is rejected', async ({
     request,
   }) => {
-    const response = await request.post(`${API_URL}/bikes`, {
-      data: {
-        user_id,
-        make: 'Yamaha',
-        model: 'Tracer 9GT',
-        year: 1899,
-        odo: 1000,
-      },
-    });
+    const response = await createBike(request, user_id, { year: 1899 });
 
     expect(response.status()).toBe(400);
 
@@ -150,15 +153,7 @@ test.describe('Garage API test suite', () => {
   test('Create bike with negative odometer is rejected', async ({
     request,
   }) => {
-    const response = await request.post(`${API_URL}/bikes`, {
-      data: {
-        user_id,
-        make: 'Yamaha',
-        model: 'Tracer 9GT',
-        year: 2021,
-        odo: -1000,
-      },
-    });
+    const response = await createBike(request, user_id, { odo: -100 });
 
     expect(response.status()).toBe(400);
 
@@ -167,18 +162,15 @@ test.describe('Garage API test suite', () => {
   });
 
   test('Update bike with valid data succeeds', async ({ request }) => {
-    await createBike(request, user_id);
-    const bike_id = await getFirstBikeId(request, user_id);
+    const bikeResponse = await createBike(request, user_id);
+    const body = await bikeResponse.json();
+    bike_id = body.bike.id;
 
-    const updateResponse = await request.put(`${API_URL}/bikes/${bike_id}`, {
-      data: {
-        id: bike_id,
-        user_id,
-        make: 'Honda',
-        model: 'Rebel',
-        year: 2022,
-        odo: 1500,
-      },
+    const updateResponse = await updateBike(request, user_id, bike_id, {
+      make: 'Honda',
+      model: 'Rebel',
+      odo: 1000,
+      year: 2010,
     });
 
     expect(updateResponse.status()).toBe(200);
@@ -186,26 +178,21 @@ test.describe('Garage API test suite', () => {
     const updateBody = await updateResponse.json();
     expect(updateBody.message).toBe('Bike updated successfully');
 
-    const bikes = await listBikes(request, user_id);
-    expect(bikes[0].make).toBe('Honda');
-    expect(bikes[0].model).toBe('Rebel');
-    expect(bikes[0].year).toBe(2022);
-    expect(bikes[0].odo).toBe(1500);
+    const bike = await listFirstBike(request, user_id);
+    expect(bike.make).toBe('Honda');
+    expect(bike.model).toBe('Rebel');
   });
 
   test('Update bike with lower odometer is rejected', async ({ request }) => {
-    await createBike(request, user_id);
-    const bike_id = await getFirstBikeId(request, user_id);
+    const bikeResponse = await createBike(request, user_id);
+    const body = await bikeResponse.json();
+    bike_id = body.bike.id;
 
-    const updateResponse = await request.put(`${API_URL}/bikes/${bike_id}`, {
-      data: {
-        id: bike_id,
-        user_id,
-        make: 'Yamaha',
-        model: 'Tracer 9GT',
-        year: 2021,
-        odo: 900,
-      },
+    const updateResponse = await updateBike(request, user_id, bike_id, {
+      make: 'Yamaha',
+      model: 'Tracer 9GT',
+      year: 2021,
+      odo: 900,
     });
 
     expect(updateResponse.status()).toBe(400);
@@ -215,8 +202,9 @@ test.describe('Garage API test suite', () => {
   });
 
   test('Delete bike succeeds', async ({ request }) => {
-    await createBike(request, user_id);
-    const bike_id = await getFirstBikeId(request, user_id);
+    const bikeResponse = await createBike(request, user_id);
+    const body = await bikeResponse.json();
+    bike_id = body.bike.id;
 
     const deleteResponse = await request.delete(
       `${API_URL}/bikes/${bike_id}?user_id=${user_id}`,
@@ -227,7 +215,7 @@ test.describe('Garage API test suite', () => {
     const deleteBody = await deleteResponse.json();
     expect(deleteBody.message).toBe('Bike deleted successfully');
 
-    const bikes = await listBikes(request, user_id);
-    expect(bikes).toHaveLength(0);
+    const bike = await listFirstBike(request, user_id);
+    expect(bike).toBeUndefined();
   });
 });

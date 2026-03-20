@@ -1,11 +1,11 @@
-import { test, expect, APIRequestContext } from '@playwright/test';
+import { test, expect, APIRequestContext, APIResponse } from '@playwright/test';
 import { uniqueEmail, API_URL, PASSWORD } from '../utils/test-data';
 
 async function registerUser(
   request: APIRequestContext,
   email: string,
   password = PASSWORD,
-): Promise<void> {
+): Promise<APIResponse> {
   const response = await request.post(`${API_URL}/auth/register`, {
     data: {
       email,
@@ -13,10 +13,22 @@ async function registerUser(
     },
   });
 
-  expect(response.status()).toBe(201);
+  return response;
+}
 
-  const body = await response.json();
-  expect(body.message).toBe('User registered successfully');
+async function loginUser(
+  request: APIRequestContext,
+  email: string,
+  password = PASSWORD,
+): Promise<APIResponse> {
+  const loginResponse = await request.post(`${API_URL}/auth/login`, {
+    data: {
+      email,
+      password,
+    },
+  });
+
+  return loginResponse;
 }
 
 test.describe('Auth API test suite', () => {
@@ -27,12 +39,7 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Register with valid credentials succeeds', async ({ request }) => {
-    const response = await request.post(`${API_URL}/auth/register`, {
-      data: {
-        email,
-        password: PASSWORD,
-      },
-    });
+    const response = await registerUser(request, email, PASSWORD);
 
     expect(response.status()).toBe(201);
 
@@ -43,12 +50,7 @@ test.describe('Auth API test suite', () => {
   test('Register with duplicate email is rejected', async ({ request }) => {
     await registerUser(request, email);
 
-    const duplicateResponse = await request.post(`${API_URL}/auth/register`, {
-      data: {
-        email,
-        password: PASSWORD,
-      },
-    });
+    const duplicateResponse = await registerUser(request, email, PASSWORD);
 
     expect(duplicateResponse.status()).toBe(409);
 
@@ -57,12 +59,7 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Register with invalid email is rejected', async ({ request }) => {
-    const response = await request.post(`${API_URL}/auth/register`, {
-      data: {
-        email: '##@abv.bg',
-        password: PASSWORD,
-      },
-    });
+    const response = await registerUser(request, '##@abv.bg', PASSWORD);
 
     expect(response.status()).toBe(400);
 
@@ -71,12 +68,7 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Register with missing email is rejected', async ({ request }) => {
-    const response = await request.post(`${API_URL}/auth/register`, {
-      data: {
-        email: '',
-        password: PASSWORD,
-      },
-    });
+    const response = await registerUser(request, '', PASSWORD);
 
     expect(response.status()).toBe(400);
 
@@ -85,12 +77,7 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Register with missing password is rejected', async ({ request }) => {
-    const response = await request.post(`${API_URL}/auth/register`, {
-      data: {
-        email,
-        password: '',
-      },
-    });
+    const response = await registerUser(request, email, '');
 
     expect(response.status()).toBe(400);
 
@@ -99,12 +86,7 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Register with short password is rejected', async ({ request }) => {
-    const response = await request.post(`${API_URL}/auth/register`, {
-      data: {
-        email,
-        password: 'test',
-      },
-    });
+    const response = await registerUser(request, email, 'test');
 
     expect(response.status()).toBe(400);
 
@@ -113,13 +95,11 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Register with long password is rejected', async ({ request }) => {
-    const response = await request.post(`${API_URL}/auth/register`, {
-      data: {
-        email,
-        password:
-          'testingthesuperlongpasswordtwotimestestingthesuperlongpasswordtwotimes',
-      },
-    });
+    const response = await registerUser(
+      request,
+      email,
+      'testingthesuperlongpasswordtwotimestestingthesuperlongpasswordtwotimes',
+    );
 
     expect(response.status()).toBe(400);
 
@@ -128,14 +108,9 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Login with valid credentials succeeds', async ({ request }) => {
-    await registerUser(request, email);
+    await registerUser(request, email, PASSWORD);
 
-    const loginResponse = await request.post(`${API_URL}/auth/login`, {
-      data: {
-        email,
-        password: PASSWORD,
-      },
-    });
+    const loginResponse = await loginUser(request, email, PASSWORD);
 
     expect(loginResponse.status()).toBe(200);
 
@@ -144,14 +119,9 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Login with wrong password is rejected', async ({ request }) => {
-    await registerUser(request, email);
+    await registerUser(request, email, PASSWORD);
 
-    const loginResponse = await request.post(`${API_URL}/auth/login`, {
-      data: {
-        email,
-        password: 'testingpass1',
-      },
-    });
+    const loginResponse = await loginUser(request, email, 'testingpass123');
 
     expect(loginResponse.status()).toBe(401);
 
@@ -160,12 +130,7 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Login with non existing email is rejected', async ({ request }) => {
-    const loginResponse = await request.post(`${API_URL}/auth/login`, {
-      data: {
-        email,
-        password: PASSWORD,
-      },
-    });
+    const loginResponse = await loginUser(request, 'test@gmail.com', PASSWORD);
 
     expect(loginResponse.status()).toBe(401);
 
@@ -174,12 +139,7 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Login with missing email is rejected', async ({ request }) => {
-    const loginResponse = await request.post(`${API_URL}/auth/login`, {
-      data: {
-        email: '',
-        password: PASSWORD,
-      },
-    });
+    const loginResponse = await loginUser(request, '', PASSWORD);
 
     expect(loginResponse.status()).toBe(400);
 
@@ -188,12 +148,7 @@ test.describe('Auth API test suite', () => {
   });
 
   test('Login with missing password is rejected', async ({ request }) => {
-    const loginResponse = await request.post(`${API_URL}/auth/login`, {
-      data: {
-        email,
-        password: '',
-      },
-    });
+    const loginResponse = await loginUser(request, email, '');
 
     expect(loginResponse.status()).toBe(400);
 
