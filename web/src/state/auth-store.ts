@@ -1,8 +1,6 @@
-/* Auth store is responsible for the app users functions */
-
 import type { AuthUser } from '../types/auth';
 
-const AUTH_USER_KEY = 'motocare.auth.user';
+const AUTH_USER_KEY = 'motocaremaintenance.auth.user';
 
 let currentUser: AuthUser | null = readStoredUser();
 

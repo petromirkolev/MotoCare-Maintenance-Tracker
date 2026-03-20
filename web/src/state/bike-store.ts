@@ -1,5 +1,3 @@
-/* Bike store manages the list of bikes and their basic information. */
-
 import type { Bike } from '../types/bikes';
 import { getState, setState } from './state-store';
 

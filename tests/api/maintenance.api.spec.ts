@@ -77,7 +77,7 @@ async function listBikes(
   request: APIRequestContext,
   user_id: string,
 ): Promise<any[]> {
-  const response = await request.get(`${API_URL}/bikes?userId=${user_id}`);
+  const response = await request.get(`${API_URL}/bikes?user_id=${user_id}`);
 
   expect(response.status()).toBe(200);
 
@@ -128,7 +128,7 @@ test.describe('Maintenance API test suite', () => {
     expect(upsertBody.message).toBe('Maintenance created successfully');
 
     const listResponse = await request.get(
-      `${API_URL}/maintenance?bikeId=${bike_id}`,
+      `${API_URL}/maintenance?bike_id=${bike_id}`,
     );
 
     expect(listResponse.status()).toBe(200);
@@ -208,7 +208,7 @@ test.describe('Maintenance API test suite', () => {
     expect(upsertBody.message).toBe('Maintenance created successfully');
 
     const listResponse = await request.get(
-      `${API_URL}/maintenance?bikeId=${bike_id}`,
+      `${API_URL}/maintenance?bike_id=${bike_id}`,
     );
 
     expect(listResponse.status()).toBe(200);
@@ -239,7 +239,7 @@ test.describe('Maintenance API test suite', () => {
 
     const upsertBody = await upsertResponse.json();
 
-    expect(upsertBody.error).toBe('Odo must be a non-negative integer');
+    expect(upsertBody.error).toBe('odo must be a non-negative integer');
   });
 
   test('Maintenance schedule for bike A does not affect bike B', async ({
@@ -292,7 +292,7 @@ test.describe('Maintenance API test suite', () => {
     expect(scheduleBody.message).toBe('Maintenance scheduled successfully');
 
     const bikeOneListResponse = await request.get(
-      `${API_URL}/maintenance?bikeId=${bikeOneId}`,
+      `${API_URL}/maintenance?bike_id=${bikeOneId}`,
     );
 
     expect(bikeOneListResponse.status()).toBe(200);
@@ -306,7 +306,7 @@ test.describe('Maintenance API test suite', () => {
     expect(bikeOneListBody.maintenance[0].interval_days).toBe(100);
 
     const bikeTwoListResponse = await request.get(
-      `${API_URL}/maintenance?bikeId=${bikeTwoId}`,
+      `${API_URL}/maintenance?bike_id=${bikeTwoId}`,
     );
 
     expect(bikeTwoListResponse.status()).toBe(200);
@@ -348,7 +348,7 @@ test.describe('Maintenance API test suite', () => {
     expect(upsertBody.message).toBe('Maintenance created successfully');
 
     const bikeOneListResponse = await request.get(
-      `${API_URL}/maintenance?bikeId=${bikeOneId}`,
+      `${API_URL}/maintenance?bike_id=${bikeOneId}`,
     );
 
     expect(bikeOneListResponse.status()).toBe(200);
@@ -360,7 +360,7 @@ test.describe('Maintenance API test suite', () => {
     expect(bikeOneListBody.maintenance[0].name).toBe('oil-change');
 
     const bikeTwoListResponse = await request.get(
-      `${API_URL}/maintenance?bikeId=${bikeTwoId}`,
+      `${API_URL}/maintenance?bike_id=${bikeTwoId}`,
     );
 
     expect(bikeTwoListResponse.status()).toBe(200);
@@ -411,7 +411,7 @@ test.describe('Maintenance API test suite', () => {
     expect(coolantBody.message).toBe('Maintenance created successfully');
 
     const bikeListResponse = await request.get(
-      `${API_URL}/maintenance?bikeId=${bike_id}`,
+      `${API_URL}/maintenance?bike_id=${bike_id}`,
     );
 
     expect(bikeListResponse.status()).toBe(200);

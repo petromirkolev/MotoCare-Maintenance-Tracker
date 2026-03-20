@@ -1,5 +1,3 @@
-/* This file contains functions for managing maintenance logs, including fetching and creating maintenance logs. */
-
 import type {
   MaintenanceLogDto,
   ListMaintenanceLogsResponse,
@@ -10,10 +8,10 @@ import type {
 const API_BASE_URL = 'http://localhost:3001';
 
 export async function fetchMaintenanceLogsByBikeId(
-  bikeId: string,
+  bike_id: string,
 ): Promise<MaintenanceLogDto[]> {
   const response = await fetch(
-    `${API_BASE_URL}/maintenance-logs?bikeId=${encodeURIComponent(bikeId)}`,
+    `${API_BASE_URL}/maintenance-logs?bike_id=${encodeURIComponent(bike_id)}`,
   );
 
   const data = (await response.json()) as

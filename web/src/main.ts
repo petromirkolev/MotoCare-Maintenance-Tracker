@@ -1,5 +1,3 @@
-/* Entry point for the Motorcycle Maintenance Assistant web application. */
-
 import { bindEvents } from './ui/router';
 import { render } from './dom/render';
 import { getCurrentUser } from './state/auth-store';

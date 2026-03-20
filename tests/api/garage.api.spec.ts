@@ -77,7 +77,7 @@ async function listBikes(
   request: APIRequestContext,
   user_id: string,
 ): Promise<any[]> {
-  const response = await request.get(`${API_URL}/bikes?userId=${user_id}`);
+  const response = await request.get(`${API_URL}/bikes?user_id=${user_id}`);
 
   expect(response.status()).toBe(200);
 
@@ -219,7 +219,7 @@ test.describe('Garage API test suite', () => {
     const bike_id = await getFirstBikeId(request, user_id);
 
     const deleteResponse = await request.delete(
-      `${API_URL}/bikes/${bike_id}?userId=${user_id}`,
+      `${API_URL}/bikes/${bike_id}?user_id=${user_id}`,
     );
 
     expect(deleteResponse.status()).toBe(200);

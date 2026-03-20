@@ -16,15 +16,15 @@ import {
 const maintenanceRouter = Router();
 
 maintenanceRouter.get('/', async (req, res) => {
-  const bikeId = String(req.query.bikeId ?? '').trim();
+  const bike_id = String(req.query.bike_id ?? '').trim();
 
-  if (!bikeId) {
-    res.status(400).json({ error: 'bikeId query param is required' });
+  if (!bike_id) {
+    res.status(400).json({ error: 'bike_id query param is required' });
     return;
   }
 
   try {
-    const maintenance = await listMaintenanceByBikeId(bikeId);
+    const maintenance = await listMaintenanceByBikeId(bike_id);
     res.json({ maintenance });
   } catch (error) {
     console.error('List maintenance failed:', error);
@@ -61,7 +61,7 @@ maintenanceRouter.post('/upsert', async (req, res) => {
   }
 
   if (odo !== undefined && odo !== null && !isNonNegativeInteger(odo)) {
-    res.status(400).json({ error: 'Odo must be a non-negative integer' });
+    res.status(400).json({ error: 'odo must be a non-negative integer' });
     return;
   }
 

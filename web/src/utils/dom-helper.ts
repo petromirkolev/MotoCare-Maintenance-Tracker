@@ -1,5 +1,3 @@
-/* Helper functions for DOM manipulation related to the motorcycle maintenance assistant application. */
-
 import type { Maintenance } from '../types/maintenance';
 
 export function req<T extends HTMLElement>(el: T | null, name: string): T {

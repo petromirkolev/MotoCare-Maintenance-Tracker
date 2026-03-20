@@ -57,7 +57,7 @@ authRouter.post('/register', async (req, res) => {
     await createUser(email, password);
     sendRegisterSuccess(res, REGISTER_SUCCESS_MESSAGE);
   } catch (error) {
-    console.error('Register failed:', error);
+    console.error('Registration failed:', error);
     sendAuthError(res, 500, INTERNAL_SERVER_ERROR);
   }
 });

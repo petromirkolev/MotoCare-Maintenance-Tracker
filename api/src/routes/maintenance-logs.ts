@@ -13,10 +13,10 @@ import {
 const maintenanceLogsRouter = Router();
 
 maintenanceLogsRouter.get('/', async (req, res) => {
-  const bike_id = String(req.query.bikeId ?? '').trim();
+  const bike_id = String(req.query.bike_id ?? '').trim();
 
   if (!bike_id) {
-    res.status(400).json({ error: 'bikeId query param is required' });
+    res.status(400).json({ error: 'bike_id query param is required' });
     return;
   }
 

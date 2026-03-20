@@ -1,5 +1,3 @@
-/* Module to manage screen visibility in the Motorcycle Maintenance Assistant app. */
-
 import { dom } from '../dom/selectors';
 
 export type Screen =

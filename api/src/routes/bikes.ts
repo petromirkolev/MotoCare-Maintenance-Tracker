@@ -16,15 +16,15 @@ import {
 const bikesRouter = Router();
 
 bikesRouter.get('/', async (req, res) => {
-  const userId = String(req.query.userId ?? '').trim();
+  const user_id = String(req.query.user_id ?? '').trim();
 
-  if (!userId) {
-    res.status(400).json({ error: 'userId query param is required' });
+  if (!user_id) {
+    res.status(400).json({ error: 'user_id query param is required' });
     return;
   }
 
   try {
-    const bikes = await listBikesByUserId(userId);
+    const bikes = await listBikesByUserId(user_id);
     res.json({ bikes });
   } catch (error) {
     console.error('List bikes failed:', error);
@@ -60,7 +60,7 @@ bikesRouter.post('/', async (req, res) => {
   if (!user_id || !make || !model || year === undefined || odo === undefined) {
     res
       .status(400)
-      .json({ error: 'userId, make, model, year, and odo are required' });
+      .json({ error: 'user_id, make, model, year, and odo are required' });
     return;
   }
 
@@ -111,7 +111,7 @@ bikesRouter.put('/:id', async (req, res) => {
   ) {
     res
       .status(400)
-      .json({ error: 'id, user id, make, model, year, and odo are required' });
+      .json({ error: 'id, user_id, make, model, year, and odo are required' });
     return;
   }
 
@@ -153,10 +153,10 @@ bikesRouter.put('/:id', async (req, res) => {
 
 bikesRouter.delete('/:id', async (req, res) => {
   const bike_id = req.params.id;
-  const user_id = String(req.query.userId ?? '').trim();
+  const user_id = String(req.query.user_id ?? '').trim();
 
   if (!bike_id || !user_id) {
-    res.status(400).json({ error: 'ID and User ID are required' });
+    res.status(400).json({ error: 'bike_id and user_id are required' });
     return;
   }
 

@@ -1,5 +1,3 @@
-/* Router module to handle navigation and user interactions in the Motorcycle Maintenance Assistant app. */
-
 import { render } from '../dom/render';
 import { dom } from '../dom/selectors';
 import { req } from '../utils/dom-helper';

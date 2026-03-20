@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (_req, res) => {
-  res.json({ message: 'Moto Care API is running' });
+  res.json({ message: 'MotoCare Maintenance Tracker API is running' });
 });
 app.use('/auth', authRouter);
 app.use('/bikes', bikesRouter);

@@ -1,5 +1,3 @@
-/* Helper functions for checking the due status of maintenance items based on date and odometer readings. */
-
 import { bikeStore } from '../state/bike-store';
 import type { Maintenance } from '../types/maintenance';
 

@@ -1,5 +1,3 @@
-/* Types related to maintenance records and schedules */
-
 export type Maintenance = {
   id: string;
   bike_id: string;

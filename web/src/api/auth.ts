@@ -1,5 +1,3 @@
-/* This file contains functions for user authentication, including registration and login. */
-
 import type {
   RegisterResponse,
   ErrorResponse,
@@ -23,7 +21,7 @@ export async function registerUser(
   const data = (await response.json()) as RegisterResponse | ErrorResponse;
 
   if (!response.ok) {
-    throw new Error('error' in data ? data.error : 'Register failed');
+    throw new Error('error' in data ? data.error : 'Registration failed');
   }
 
   return data as RegisterResponse;

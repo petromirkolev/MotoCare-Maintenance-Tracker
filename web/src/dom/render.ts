@@ -1,5 +1,3 @@
-/* Functions responsible for rendering the UI based on the current state of the application. These functions manipulate the DOM to display the appropriate screens and content to the user. */
-
 import { dom } from './selectors';
 import { getState } from '../state/state-store';
 import { createBikeCard } from '../ui/create-bike-card';
@@ -30,7 +28,7 @@ export const render = {
     const currentUser = getCurrentUser();
 
     req(dom.userEmail, 'userEmail').textContent =
-      `Hello, ${currentUser?.email}!`;
+      `Hello, ${currentUser?.email}`;
     req(dom.garageCount, 'garageCount').textContent =
       bikes.length > 1 || bikes.length === 0
         ? `${bikes.length} motorcycles`
@@ -73,31 +71,32 @@ export const render = {
       case 'nav.login':
       case 'auth.login':
       case 'auth.logout':
-        dom.loginHint!.textContent = message;
+        if (dom.loginHint) dom.loginHint.textContent = message;
         break;
 
       case 'nav.register':
-        dom.regHint!.textContent = message;
+        if (dom.regHint) dom.regHint.textContent = message;
         break;
 
       case 'auth.register':
-        dom.regHint!.textContent = message;
+        if (dom.regHint) dom.regHint.textContent = message;
         break;
 
       case 'bike.add.submit':
-        dom.addHint!.textContent = message;
+        if (dom.addHint) dom.addHint.textContent = message;
         break;
 
       case 'bike.edit.submit':
-        dom.editBikeHint!.textContent = message;
+        if (dom.editBikeHint) dom.editBikeHint.textContent = message;
         break;
 
       case 'log.submit':
-        dom.logServiceHint!.textContent = message;
+        if (dom.logServiceHint) dom.logServiceHint.textContent = message;
         break;
 
       case 'schedule.submit':
-        dom.scheduleServiceHint!.textContent = message;
+        if (dom.scheduleServiceHint)
+          dom.scheduleServiceHint.textContent = message;
         break;
 
       default:

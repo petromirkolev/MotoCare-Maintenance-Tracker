@@ -1,7 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const dbPath = path.resolve(__dirname, '../../api/data/motocare.test.sqlite');
+const dbPath = path.resolve(
+  __dirname,
+  '../../api/data/motocaremaintenance.test.sqlite',
+);
 
 if (fs.existsSync(dbPath)) {
   fs.unlinkSync(dbPath);

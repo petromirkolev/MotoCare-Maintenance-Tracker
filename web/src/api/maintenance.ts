@@ -1,5 +1,3 @@
-/* This file contains functions for managing maintenance records, including fetching and upserting maintenance records. */
-
 import type {
   MaintenanceDto,
   ListMaintenanceResponse,
@@ -10,10 +8,10 @@ import type {
 const API_BASE_URL = 'http://localhost:3001';
 
 export async function fetchMaintenanceByBikeId(
-  bikeId: string,
+  bike_id: string,
 ): Promise<MaintenanceDto[]> {
   const response = await fetch(
-    `${API_BASE_URL}/maintenance?bikeId=${encodeURIComponent(bikeId)}`,
+    `${API_BASE_URL}/maintenance?bike_id=${encodeURIComponent(bike_id)}`,
   );
 
   const data = (await response.json()) as

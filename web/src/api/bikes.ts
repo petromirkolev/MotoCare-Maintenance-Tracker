@@ -1,5 +1,3 @@
-/* This file contains functions for managing bikes, including fetching, creating, updating, and deleting bikes. */
-
 import { getCurrentUser } from '../state/auth-store';
 import { bikeStore } from '../state/bike-store';
 import type {
@@ -19,7 +17,7 @@ export async function fetchBikes(): Promise<Bike[]> {
   }
 
   const response = await fetch(
-    `${API_BASE_URL}/bikes?userId=${encodeURIComponent(currentUser.id)}`,
+    `${API_BASE_URL}/bikes?user_id=${encodeURIComponent(currentUser.id)}`,
   );
 
   const data = (await response.json()) as ListBikesResponse | ErrorResponse;
@@ -130,7 +128,7 @@ export async function deleteBikeApi(id: string): Promise<{ message: string }> {
   }
 
   const response = await fetch(
-    `${API_BASE_URL}/bikes/${encodeURIComponent(id)}?userId=${encodeURIComponent(currentUser.id)}`,
+    `${API_BASE_URL}/bikes/${encodeURIComponent(id)}?user_id=${encodeURIComponent(currentUser.id)}`,
     {
       method: 'DELETE',
     },

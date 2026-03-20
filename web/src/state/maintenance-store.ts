@@ -1,5 +1,3 @@
-/* Maintenance store manages the maintenance tasks and logs for each bike. */
-
 import type {
   Maintenance,
   MaintenanceLogInput,
@@ -143,7 +141,7 @@ export const maintenanceStore = {
       checkOverdueStatus(item, selectedBike, today),
     );
 
-    /* Update "Recent History" */
+    // Update "Recent History"
     if (lastServicedItem !== undefined) {
       dom.maintenanceHistory.querySelector('.empty__title').textContent =
         lastServicedItem.name
@@ -170,13 +168,12 @@ export const maintenanceStore = {
         'Log a service to start building your maintenance timeline.';
     }
 
-    /* Update Overdue / Due Soon / On Track */
+    // Update Overdue / Due Soon / On Track
     dom.maintenanceOnTrack.textContent =
       totalServiceItems.length - totalOverdueItems.length;
     dom.maintenanceDueSoon.textContent = totalDueItems.length;
     dom.maintenanceOverdue.textContent = totalOverdueItems.length;
 
-    /* Mark overdue tasks with red and due soon tasks with orange in the maintenance list. */
     markOverdueTasks(totalOverdueItems);
     markDueTasks(totalDueItems);
   },

@@ -1,5 +1,3 @@
-/* Helper functions for checking the status of service items. */
-
 import type { Maintenance } from '../types/maintenance';
 
 export function checkServiceItemsStatus(
