@@ -6,46 +6,46 @@ export const validInput = {
 export const invalidEmailInput = {
   invalidEmailEmpty: {
     value: '',
-    testDescription: 'Invalid empty email',
+    testDescription: 'invalid empty email',
   },
   invalidWhitespacedEmail: {
     value: '    ',
-    testDescription: 'Invalid whitespaced email',
+    testDescription: 'invalid whitespaced email',
   },
   invalidEmailWithoutPrefix: {
     value: '@test.com',
-    testDescription: 'Invalid email without prefix',
+    testDescription: 'invalid email without prefix',
   },
   invalidEmailWithoutTLD: {
     value: 'test@test',
-    testDescription: 'Invalid email without TLD',
+    testDescription: 'invalid email without TLD',
   },
   invalidEmailWithoutDomain: {
     value: 'test@com',
-    testDescription: 'Invalid email without domain',
+    testDescription: 'invalid email without domain',
   },
   invalidEmailWithDisallowedChars: {
     value: '##@test.com',
-    testDescription: 'Invalid email with disallowed chars',
+    testDescription: 'invalid email with disallowed chars',
   },
 };
 
 export const invalidPasswordInput = {
   invalidPasswordEmpty: {
     value: '',
-    testDescription: 'Invalid empty password',
+    testDescription: 'invalid empty password',
   },
   invalidEmptyWhitespacedPassword: {
     value: '    ',
-    testDescription: 'Invalid whitespaced password',
+    testDescription: 'invalid whitespaced password',
   },
   invalidTooShortPassword: {
     value: '1234',
-    testDescription: 'Invalid too short password',
+    testDescription: 'invalid too short password',
   },
   invalidTooLongPassword: {
     value: '1234554321123455432112345543211234554321',
-    testDescription: 'Invalid too long password',
+    testDescription: 'invalid too long password',
   },
 };
 

@@ -56,35 +56,39 @@ test.describe('Login page test suite', () => {
     await expect(page.getByTestId('screen-login')).toBeVisible();
   });
 
-  for (const key of Object.keys(invalidEmailInput)) {
-    const { value, testDescription } = invalidEmailInput[key];
+  test.describe('Log in with invalid email test suite', () => {
+    for (const key of Object.keys(invalidEmailInput)) {
+      const { value, testDescription } = invalidEmailInput[key];
 
-    test(`Invalid email: ${testDescription}`, async ({ page }) => {
-      await loginPage.login(value, seededUser.password);
+      test(`Login with ${testDescription}`, async ({ page }) => {
+        await loginPage.login(value, seededUser.password);
 
-      if (value === '    ' || value === '') {
-        await loginPage.expectError('Email is required');
-      } else {
-        await loginPage.expectError('Invalid email format');
-      }
+        if (value === '    ' || value === '') {
+          await loginPage.expectError('Email is required');
+        } else {
+          await loginPage.expectError('Invalid email format');
+        }
 
-      await expect(page.getByTestId('screen-login')).toBeVisible();
-    });
-  }
+        await expect(page.getByTestId('screen-login')).toBeVisible();
+      });
+    }
+  });
 
-  for (const key of Object.keys(invalidPasswordInput)) {
-    const { value, testDescription } = invalidPasswordInput[key];
+  test.describe('Login with invalid password test suite', () => {
+    for (const key of Object.keys(invalidPasswordInput)) {
+      const { value, testDescription } = invalidPasswordInput[key];
 
-    test(`Invalid password: ${testDescription}`, async ({ page }) => {
-      await loginPage.login(seededUser.email, value);
+      test(`Invalid password: ${testDescription}`, async ({ page }) => {
+        await loginPage.login(seededUser.email, value);
 
-      if (value === '    ' || value === '') {
-        await loginPage.expectError('Password is required');
-      } else {
-        await loginPage.expectError('Invalid credentials');
-      }
+        if (value === '    ' || value === '') {
+          await loginPage.expectError('Password is required');
+        } else {
+          await loginPage.expectError('Invalid credentials');
+        }
 
-      await expect(page.getByTestId('screen-login')).toBeVisible();
-    });
-  }
+        await expect(page.getByTestId('screen-login')).toBeVisible();
+      });
+    }
+  });
 });
