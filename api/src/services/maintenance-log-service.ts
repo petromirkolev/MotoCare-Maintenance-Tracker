@@ -6,7 +6,7 @@ export async function listMaintenanceLogsByBikeId(
   bike_id: string,
 ): Promise<MaintenanceLogRow[]> {
   return getAll<MaintenanceLogRow>(
-    'SELECT * FROM maintenance_logs WHERE bike_id = ? ORDER BY date DESC, created_at DESC',
+    'SELECT * FROM maintenance_logs WHERE bike_id = $1 ORDER BY date DESC, created_at DESC',
     [bike_id],
   );
 }
@@ -27,7 +27,7 @@ export async function createMaintenanceLog(params: {
         odo,
         created_at
       )
-      VALUES (?, ?, ?, ?, ?, ?)
+      VALUES ($1, $2, $3, $4, $5, $6)
     `,
     [
       uuidv4(),

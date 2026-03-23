@@ -6,7 +6,7 @@ export async function listMaintenanceByBikeId(
   bike_id: string,
 ): Promise<MaintenanceRow[]> {
   return getAll<MaintenanceRow>(
-    'SELECT * FROM maintenance WHERE bike_id = ? ORDER BY created_at DESC',
+    'SELECT * FROM maintenance WHERE bike_id = $1 ORDER BY created_at DESC',
     [bike_id],
   );
 }
@@ -16,7 +16,7 @@ export async function findMaintenanceByBikeAndName(
   name: string,
 ): Promise<MaintenanceRow | undefined> {
   return getOne<MaintenanceRow>(
-    'SELECT * FROM maintenance WHERE bike_id = ? AND name = ?',
+    'SELECT * FROM maintenance WHERE bike_id = $1 AND name = $2',
     [bike_id, name],
   );
 }
@@ -41,7 +41,7 @@ export async function createMaintenance(params: {
         interval_days,
         created_at
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     `,
     [
       uuidv4(),
@@ -69,12 +69,12 @@ export async function updateMaintenance(params: {
     `
       UPDATE maintenance
       SET
-        name = ?,
-        date = ?,
-        odo = ?,
-        interval_km = ?,
-        interval_days = ?
-      WHERE id = ? AND bike_id = ?
+        name = $1,
+        date = $2,
+        odo = $3,
+        interval_km = $4,
+        interval_days = $5
+      WHERE id = $6 AND bike_id = $7
     `,
     [
       params.name,
