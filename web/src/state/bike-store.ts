@@ -15,6 +15,7 @@ export function readBikeForm(form: HTMLFormElement) {
 
   if (!make) throw new Error('Make is required');
   if (!model) throw new Error('Model is required');
+  if (!year) throw new Error('Year is required');
   if (!Number.isFinite(year)) throw new Error('Year must be a number');
   if (!Number.isFinite(odo)) throw new Error('Odometer must be a number');
 
