@@ -24,8 +24,11 @@ export const test = base.extend<AuthFixtures>({
       password: validInput.password,
     };
     await registerPage.register(user.email, user.password, user.password);
+    await expect(loginPage.loginScreen).toBeVisible();
+
     await loginPage.login(user.email, user.password);
     await garagePage.expectGarageVisible();
+
     await use(user);
   },
 });

@@ -1,3 +1,5 @@
+import { Bike } from '../types/bike';
+
 export const validInput = {
   email: 'example@test.com',
   password: 'testingpass',

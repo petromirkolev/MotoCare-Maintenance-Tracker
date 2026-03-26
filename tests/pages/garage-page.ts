@@ -61,7 +61,7 @@ export class GaragePage {
     await expect(this.editBikeScreen).toBeVisible();
   }
 
-  async fillAddBikeForm({ make, model, year, odometer }): Promise<void> {
+  async addBike({ make, model, year, odometer }): Promise<void> {
     await this.openAddBike();
     await this.addBikeMake.fill(make);
     await this.addBikeModel.fill(model);
@@ -70,7 +70,7 @@ export class GaragePage {
     await this.submitAddBike();
   }
 
-  async fillEditBikeForm({ make, model, year, odometer }): Promise<void> {
+  async editBike({ make, model, year, odometer }): Promise<void> {
     await this.openEditBike();
     await this.editBikeMake.fill(make);
     await this.editBikeModel.fill(model);
