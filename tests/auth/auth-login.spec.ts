@@ -2,7 +2,6 @@ import { test } from '../fixtures/auth-fixtures';
 import {
   invalidEmailInput,
   invalidPasswordInput,
-  uniqueEmail,
   validInput,
 } from '../utils/test-data';
 
