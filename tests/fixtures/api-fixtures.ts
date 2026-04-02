@@ -6,57 +6,32 @@ import {
   validInput,
 } from '../utils/test-data';
 import { api } from '../utils/api-helpers';
+import { ValidBikeInput } from '../types/bike';
+import { InvalidUserInput, ValidUserInput } from '../types/auth';
+
+type InvalidBikeInput = {
+  yearBelow: number;
+  yearAbove: number;
+  odo: number;
+};
+
+type LoggedInUser = ValidUserInput & {
+  user_id: string;
+};
+
+type UserWithOneBike = LoggedInUser & {
+  bike_id: string;
+};
 
 type ApiFixtures = {
-  validUserInput: {
-    email: string;
-    password: string;
-  };
-
-  invalidUserInput: {
-    email: string;
-    password: string;
-    shortPassword: string;
-    longPassword: string;
-  };
-
-  validBikeInput: {
-    make: string;
-    model: string;
-    year: number;
-    odo: number;
-  };
-
-  validBikeUpdateInput: {
-    make: string;
-    model: string;
-    odo: number;
-    year: number;
-  };
-
-  invalidBikeInput: {
-    yearBelow: number;
-    yearAbove: number;
-    odo: number;
-  };
-
-  registeredUser: {
-    email: string;
-    password: string;
-  };
-
-  loggedInUser: {
-    email: string;
-    password: string;
-    user_id: string;
-  };
-
-  userWithOneBike: {
-    email: string;
-    password: string;
-    user_id: string;
-    bike_id: string;
-  };
+  validUserInput: ValidUserInput;
+  invalidUserInput: InvalidUserInput;
+  validBikeInput: ValidBikeInput;
+  validBikeUpdateInput: ValidBikeInput;
+  invalidBikeInput: InvalidBikeInput;
+  registeredUser: ValidUserInput;
+  loggedInUser: LoggedInUser;
+  userWithOneBike: UserWithOneBike;
 };
 
 export const test = base.extend<ApiFixtures>({

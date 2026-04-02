@@ -1,11 +1,13 @@
-export type ValidInput = {
+export type ValidUserInput = {
   email?: string;
   password?: string;
 };
 
-export type InvalidInput = {
+export type InvalidUserInput = {
   email?: string;
   password?: string;
+  shortPassword?: string;
+  longPassword?: string;
 };
 
 export type LoginResponse = {
