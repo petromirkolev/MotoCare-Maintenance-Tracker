@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { CreateBikeBody } from '../types/bike';
+import { msg } from '../constants/constants';
 import {
   isIntegerInRange,
   isNonNegativeInteger,
@@ -19,7 +20,7 @@ bikesRouter.get('/', async (req, res) => {
   const user_id = String(req.query.user_id ?? '').trim();
 
   if (!user_id) {
-    res.status(400).json({ error: 'user_id query param is required' });
+    res.status(400).json({ error: msg.PARAM_USER_ID });
     return;
   }
 
@@ -27,8 +28,8 @@ bikesRouter.get('/', async (req, res) => {
     const bikes = await listBikesByUserId(user_id);
     res.json({ bikes });
   } catch (error) {
-    console.error('List bikes failed:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(msg.BIKE_LIST_FAIL, error);
+    res.status(500).json({ error: msg.SYS_ERR_INTERNAL });
   }
 });
 
@@ -53,26 +54,22 @@ bikesRouter.post('/', async (req, res) => {
   });
 
   if (bikeAlreadyExists) {
-    res.status(400).json({ error: 'The bike already exists' });
+    res.status(400).json({ error: msg.BIKE_EXISTS });
     return;
   }
 
   if (!user_id || !make || !model || year === undefined || odo === undefined) {
-    res
-      .status(400)
-      .json({ error: 'user_id, make, model, year, and odo are required' });
+    res.status(400).json({ error: msg.PARAM_ADD_BIKE });
     return;
   }
 
   if (!isIntegerInRange(year, 1900, 2100)) {
-    res
-      .status(400)
-      .json({ error: 'Year must be an integer between 1900 and 2100' });
+    res.status(400).json({ error: msg.BIKE_YEAR_RANGE });
     return;
   }
 
   if (!isNonNegativeInteger(odo)) {
-    res.status(400).json({ error: 'Odometer must be a non-negative integer' });
+    res.status(400).json({ error: msg.PARAM_ODO_NON_NEG });
     return;
   }
 
@@ -85,12 +82,10 @@ bikesRouter.post('/', async (req, res) => {
       odo,
     });
 
-    res
-      .status(201)
-      .json({ message: 'Bike created successfully', bike: { id } });
+    res.status(201).json({ message: msg.BIKE_CREATE_OK, bike: { id } });
   } catch (error) {
-    console.error('Create bike failed:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(msg.BIKE_CREATE_FAIL, error);
+    res.status(500).json({ error: msg.SYS_ERR_INTERNAL });
   }
 });
 
@@ -111,15 +106,13 @@ bikesRouter.put('/:id', async (req, res) => {
     year === undefined ||
     odo === undefined
   ) {
-    res
-      .status(400)
-      .json({ error: 'id, user_id, make, model, year, and odo are required' });
+    res.status(400).json({ error: msg.PARAM_UPDATE_BIKE });
     return;
   }
 
   if (year !== undefined && (year < 1900 || year > 2100)) {
     {
-      res.status(400).json({ error: 'Invalid year' });
+      res.status(400).json({ error: msg.BIKE_YEAR_INVALID });
       return;
     }
   }
@@ -127,12 +120,12 @@ bikesRouter.put('/:id', async (req, res) => {
   const existingBike = await findBikeById(bike_id);
 
   if (!existingBike) {
-    res.status(404).json({ error: 'Bike not found' });
+    res.status(404).json({ error: msg.BIKE_NOT_FOUND });
     return;
   }
 
   if (odo < existingBike.odo) {
-    res.status(400).json({ error: 'Odometer cannot decrease' });
+    res.status(400).json({ error: msg.BIKE_ODO_DECR });
     return;
   }
 
@@ -146,10 +139,10 @@ bikesRouter.put('/:id', async (req, res) => {
       odo: Number(odo),
     });
 
-    res.json({ message: 'Bike updated successfully' });
+    res.json({ message: msg.BIKE_UPDATE_OK });
   } catch (error) {
-    console.error('Update bike failed:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(msg.BIKE_UPDATE_FAIL, error);
+    res.status(500).json({ error: msg.SYS_ERR_INTERNAL });
   }
 });
 
@@ -158,7 +151,7 @@ bikesRouter.delete('/:id', async (req, res) => {
   const user_id = String(req.query.user_id ?? '').trim();
 
   if (!bike_id || !user_id) {
-    res.status(400).json({ error: 'bike_id and user_id are required' });
+    res.status(400).json({ error: msg.PARAM_DELETE_BIKE });
     return;
   }
 
@@ -168,10 +161,10 @@ bikesRouter.delete('/:id', async (req, res) => {
       user_id,
     });
 
-    res.json({ message: 'Bike deleted successfully' });
+    res.json({ message: msg.BIKE_DELETE_OK });
   } catch (error) {
-    console.error('Delete bike failed:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(msg.BIKE_DELETE_FAIL, error);
+    res.status(500).json({ error: msg.SYS_ERR_INTERNAL });
   }
 });
 

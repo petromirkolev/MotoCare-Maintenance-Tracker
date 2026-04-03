@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { msg } from '../constants/constants';
 import { CreateMaintenanceLogBody } from '../types/maintenance-log';
 import {
   isNonNegativeInteger,
@@ -16,7 +17,7 @@ maintenanceLogsRouter.get('/', async (req, res) => {
   const bike_id = String(req.query.bike_id ?? '').trim();
 
   if (!bike_id) {
-    res.status(400).json({ error: 'bike_id query param is required' });
+    res.status(400).json({ error: msg.PARAM_BIKE_ID });
     return;
   }
 
@@ -24,8 +25,8 @@ maintenanceLogsRouter.get('/', async (req, res) => {
     const logs = await listMaintenanceLogsByBikeId(bike_id);
     res.json({ logs });
   } catch (error) {
-    console.error('List maintenance logs failed:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(msg.MAINT_LOG_LIST_FAIL, error);
+    res.status(500).json({ error: msg.SYS_ERR_INTERNAL });
   }
 });
 
@@ -37,19 +38,17 @@ maintenanceLogsRouter.post('/', async (req, res) => {
   const { date, odo } = body;
 
   if (!bike_id || !name || !date || odo === undefined) {
-    res
-      .status(400)
-      .json({ error: 'bike_id, name, date, and odo are required' });
+    res.status(400).json({ error: msg.PARAM_MAINT_LOG });
     return;
   }
 
   if (!isValidIsoLikeDate(date)) {
-    res.status(400).json({ error: 'Invalid date' });
+    res.status(400).json({ error: msg.MAINT_DATE_INVALID });
     return;
   }
 
   if (!isNonNegativeInteger(odo)) {
-    res.status(400).json({ error: 'Odo must be a non-negative integer' });
+    res.status(400).json({ error: msg.PARAM_ODO_NON_NEG });
     return;
   }
 
@@ -61,10 +60,10 @@ maintenanceLogsRouter.post('/', async (req, res) => {
       odo: Number(odo),
     });
 
-    res.status(201).json({ message: 'Maintenance log created successfully' });
+    res.status(201).json({ message: msg.MAINT_LOG_CREATE_OK });
   } catch (error) {
-    console.error('Create maintenance log failed:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(msg.MAINT_LOG_CREATE_FAIL, error);
+    res.status(500).json({ error: msg.SYS_ERR_INTERNAL });
   }
 });
 

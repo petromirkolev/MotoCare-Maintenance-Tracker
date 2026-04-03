@@ -1,13 +1,6 @@
 import { test, expect } from '../fixtures/api-fixtures';
 import { api } from '../utils/api-helpers';
-import {
-  BIKE_CREATE_SUCCESS,
-  BIKE_DELETE_SUCCESS,
-  BIKE_UPDATE_SUCCESS,
-  INVALID_YEAR,
-  ODO_CANNOT_DECREASE,
-  ODO_ERROR,
-} from '../utils/constants';
+import { msg } from '../../constants/constants';
 
 test.describe('Garage API test suite', () => {
   test('Create bike with valid data succeeds', async ({
@@ -15,13 +8,15 @@ test.describe('Garage API test suite', () => {
     loggedInUser,
     validBikeInput,
   }) => {
-    const response = await api.createBike(request, loggedInUser.user_id, {
-      ...validBikeInput,
-    });
+    const response = await api.createBike(
+      request,
+      loggedInUser.user_id,
+      validBikeInput,
+    );
     expect(response.status()).toBe(201);
 
     const body = await response.json();
-    expect(body.message).toBe(BIKE_CREATE_SUCCESS);
+    expect(body.message).toBe(msg.BIKE_CREATE_OK);
   });
 
   test('Create bike with invalid year above maximum is rejected', async ({
@@ -37,7 +32,7 @@ test.describe('Garage API test suite', () => {
     expect(response.status()).toBe(400);
 
     const body = await response.json();
-    expect(body.error).toBe(INVALID_YEAR);
+    expect(body.error).toBe(msg.BIKE_YEAR_RANGE);
   });
 
   test('Create bike with invalid year below minimum is rejected', async ({
@@ -53,7 +48,7 @@ test.describe('Garage API test suite', () => {
     expect(response.status()).toBe(400);
 
     const body = await response.json();
-    expect(body.error).toBe(INVALID_YEAR);
+    expect(body.error).toBe(msg.BIKE_YEAR_RANGE);
   });
 
   test('Create bike with negative odometer is rejected', async ({
@@ -69,7 +64,7 @@ test.describe('Garage API test suite', () => {
     expect(response.status()).toBe(400);
 
     const body = await response.json();
-    expect(body.error).toBe(ODO_ERROR);
+    expect(body.error).toBe(msg.BIKE_ODO_POS);
   });
 
   test('Update bike with valid data succeeds', async ({
@@ -81,12 +76,12 @@ test.describe('Garage API test suite', () => {
       request,
       userWithOneBike.user_id,
       userWithOneBike.bike_id,
-      { ...validBikeUpdateInput },
+      validBikeUpdateInput,
     );
     expect(updateResponse.status()).toBe(200);
 
     const updateBody = await updateResponse.json();
-    expect(updateBody.message).toBe(BIKE_UPDATE_SUCCESS);
+    expect(updateBody.message).toBe(msg.BIKE_UPDATE_OK);
 
     const bike = await api.listFirstBike(request, userWithOneBike.user_id);
     expect(bike.make).toBe(validBikeUpdateInput.make);
@@ -109,7 +104,7 @@ test.describe('Garage API test suite', () => {
     expect(updateResponse.status()).toBe(400);
 
     const updateBody = await updateResponse.json();
-    expect(updateBody.error).toBe(ODO_CANNOT_DECREASE);
+    expect(updateBody.error).toBe(msg.BIKE_ODO_DECR);
   });
 
   test('Delete bike succeeds', async ({ request, userWithOneBike }) => {
@@ -121,7 +116,7 @@ test.describe('Garage API test suite', () => {
     expect(deleteResponse.status()).toBe(200);
 
     const deleteBody = await deleteResponse.json();
-    expect(deleteBody.message).toBe(BIKE_DELETE_SUCCESS);
+    expect(deleteBody.message).toBe(msg.BIKE_DELETE_OK);
 
     const bike = await api.listFirstBike(request, userWithOneBike.user_id);
     expect(bike).toBeUndefined();

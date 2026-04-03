@@ -1,12 +1,6 @@
 import { test, expect } from '../fixtures/api-fixtures';
 import { api } from '../utils/api-helpers';
-import {
-  INTERVAL_DAYS_REQUIRED,
-  INTERVAL_KM_REQUIRED,
-  MAINTENANCE_CREATE_SUCCESS,
-  MAINTENANCE_SCHEDULE_SUCCESS,
-  ODO_NEGATIVE_ERROR,
-} from '../utils/constants';
+import { msg } from '../../constants/constants';
 
 test.describe('Maintenance API test suite', () => {
   test('Maintenance log with valid date/odo succeeds', async ({
@@ -17,12 +11,12 @@ test.describe('Maintenance API test suite', () => {
     const logResponse = await api.logMaintenance(
       request,
       userWithOneBike.bike_id,
-      { ...maintenanceLogInput },
+      maintenanceLogInput,
     );
     expect(logResponse.status()).toBe(201);
 
     const logBody = await logResponse.json();
-    expect(logBody.message).toBe(MAINTENANCE_CREATE_SUCCESS);
+    expect(logBody.message).toBe(msg.MAINT_CREATE_OK);
 
     const jobResponse = await api.getMaintenance(
       request,
@@ -56,7 +50,7 @@ test.describe('Maintenance API test suite', () => {
     expect(logResponse.status()).toBe(400);
 
     const upsertBody = await logResponse.json();
-    expect(upsertBody.error).toBe(ODO_NEGATIVE_ERROR);
+    expect(upsertBody.error).toBe(msg.BIKE_ODO_POS);
   });
 
   test('Maintenance log for bike A does not affect bike B', async ({
@@ -75,14 +69,12 @@ test.describe('Maintenance API test suite', () => {
     const logResponse = await api.logMaintenance(
       request,
       userWithOneBike.bike_id,
-      {
-        ...maintenanceLogInput,
-      },
+      maintenanceLogInput,
     );
     expect(logResponse.status()).toBe(201);
 
     const logBody = await logResponse.json();
-    expect(logBody.message).toBe(MAINTENANCE_CREATE_SUCCESS);
+    expect(logBody.message).toBe(msg.MAINT_CREATE_OK);
 
     const bike_1_maintenance = await api.getMaintenance(
       request,
@@ -117,7 +109,7 @@ test.describe('Maintenance API test suite', () => {
     expect(oilResponse.status()).toBe(201);
 
     const oilBody = await oilResponse.json();
-    expect(oilBody.message).toBe(MAINTENANCE_CREATE_SUCCESS);
+    expect(oilBody.message).toBe(msg.MAINT_CREATE_OK);
 
     const coolantResponse = await api.logMaintenance(
       request,
@@ -127,7 +119,7 @@ test.describe('Maintenance API test suite', () => {
     expect(coolantResponse.status()).toBe(201);
 
     const coolantBody = await coolantResponse.json();
-    expect(coolantBody.message).toBe(MAINTENANCE_CREATE_SUCCESS);
+    expect(coolantBody.message).toBe(msg.MAINT_CREATE_OK);
 
     const maintenanceResponse = await api.getMaintenance(
       request,
@@ -165,7 +157,7 @@ test.describe('Maintenance API test suite', () => {
     expect(logResponse.status()).toBe(201);
 
     const logBody = await logResponse.json();
-    expect(logBody.message).toBe(MAINTENANCE_SCHEDULE_SUCCESS);
+    expect(logBody.message).toBe(msg.MAINT_SCHED_OK);
 
     const getResponse = await api.getMaintenance(
       request,
@@ -199,7 +191,7 @@ test.describe('Maintenance API test suite', () => {
     expect(logResponse.status()).toBe(400);
 
     const logBody = await logResponse.json();
-    expect(logBody.error).toBe(INTERVAL_DAYS_REQUIRED);
+    expect(logBody.error).toBe(msg.MAINT_DAYS_REQ);
   });
 
   test('Maintenance schedule with missing kilometers is rejected', async ({
@@ -218,7 +210,7 @@ test.describe('Maintenance API test suite', () => {
     expect(logResponse.status()).toBe(400);
 
     const logBody = await logResponse.json();
-    expect(logBody.error).toBe(INTERVAL_KM_REQUIRED);
+    expect(logBody.error).toBe(msg.MAINT_KM_REQ);
   });
 
   test('Maintenance schedule for bike A does not affect bike B', async ({
@@ -241,7 +233,7 @@ test.describe('Maintenance API test suite', () => {
     expect(schedule_oil_service_bike_1.status()).toBe(201);
 
     const oil_service_bike_1_body = await schedule_oil_service_bike_1.json();
-    expect(oil_service_bike_1_body.message).toBe(MAINTENANCE_SCHEDULE_SUCCESS);
+    expect(oil_service_bike_1_body.message).toBe(msg.MAINT_SCHED_OK);
 
     const bike_1_maintenance = await api.getMaintenance(
       request,
@@ -264,9 +256,7 @@ test.describe('Maintenance API test suite', () => {
 
     const coolant_service_bike_2_body =
       await schedule_coolant_service_bike_2.json();
-    expect(coolant_service_bike_2_body.message).toBe(
-      MAINTENANCE_SCHEDULE_SUCCESS,
-    );
+    expect(coolant_service_bike_2_body.message).toBe(msg.MAINT_SCHED_OK);
 
     const bike_2_maintenance = await api.getMaintenance(request, bike_2_id);
     expect(bike_2_maintenance.status()).toBe(200);

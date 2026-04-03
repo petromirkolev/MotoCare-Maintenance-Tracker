@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { UpsertMaintenanceBody } from '../types/maintenance';
+import { msg } from '../constants/constants';
 import {
   isNonNegativeInteger,
   isPositiveInteger,
@@ -19,7 +20,7 @@ maintenanceRouter.get('/', async (req, res) => {
   const bike_id = String(req.query.bike_id ?? '').trim();
 
   if (!bike_id) {
-    res.status(400).json({ error: 'bike_id query param is required' });
+    res.status(400).json({ error: msg.PARAM_BIKE_ID });
     return;
   }
 
@@ -27,8 +28,8 @@ maintenanceRouter.get('/', async (req, res) => {
     const maintenance = await listMaintenanceByBikeId(bike_id);
     res.json({ maintenance });
   } catch (error) {
-    console.error('List maintenance failed:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(msg.MAINT_LIST_FAIL, error);
+    res.status(500).json({ error: msg.SYS_ERR_INTERNAL });
   }
 });
 
@@ -39,24 +40,24 @@ maintenanceRouter.post('/log', async (req, res) => {
   const { date, odo, interval_km, interval_days } = body;
 
   if (!bike_id || !name) {
-    res.status(400).json({ error: 'bike_id and name are required' });
+    res.status(400).json({ error: msg.PARAM_BIKE_NAME });
     return;
   }
 
   if (date === undefined && odo === undefined) {
     res.status(400).json({
-      error: 'At least one maintenance log field must be provided',
+      error: msg.MAINT_LOG_FIELDS,
     });
     return;
   }
 
   if (date !== undefined && date !== null && !isValidIsoLikeDate(date)) {
-    res.status(400).json({ error: 'Invalid date' });
+    res.status(400).json({ error: msg.MAINT_DATE_INVALID });
     return;
   }
 
   if (odo !== undefined && odo !== null && !isNonNegativeInteger(odo)) {
-    res.status(400).json({ error: 'odo must be a non-negative integer' });
+    res.status(400).json({ error: msg.PARAM_ODO_NON_NEG });
     return;
   }
 
@@ -73,7 +74,7 @@ maintenanceRouter.post('/log', async (req, res) => {
         interval_days: interval_days ?? null,
       });
 
-      res.status(201).json({ message: 'Maintenance created successfully' });
+      res.status(201).json({ message: msg.MAINT_CREATE_OK });
       return;
     }
 
@@ -87,10 +88,10 @@ maintenanceRouter.post('/log', async (req, res) => {
       interval_days: interval_days ?? existing.interval_days,
     });
 
-    res.json({ message: 'Maintenance updated successfully' });
+    res.json({ message: msg.MAINT_UPDATE_OK });
   } catch (error) {
-    console.error('Upsert maintenance failed:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(msg.MAINT_UPDATE_FAIL, error);
+    res.status(500).json({ error: msg.SYS_ERR_INTERNAL });
   }
 });
 
@@ -101,27 +102,27 @@ maintenanceRouter.post('/schedule', async (req, res) => {
   const { interval_km, interval_days } = body;
 
   if (!bike_id || !name) {
-    res.status(400).json({ error: 'bike_id and name are required' });
+    res.status(400).json({ error: msg.PARAM_BIKE_NAME });
     return;
   }
 
   if (interval_km === undefined || interval_km === null) {
-    res.status(400).json({ error: 'interval_km is required' });
+    res.status(400).json({ error: msg.PARAM_INT_KM });
     return;
   }
 
   if (interval_days === undefined || interval_days === null) {
-    res.status(400).json({ error: 'interval_days is required' });
+    res.status(400).json({ error: msg.PARAM_INT_DAYS });
     return;
   }
 
   if (!isPositiveInteger(interval_km)) {
-    res.status(400).json({ error: 'interval_km must be a positive integer' });
+    res.status(400).json({ error: msg.PARAM_INT_KM_POS });
     return;
   }
 
   if (!isPositiveInteger(interval_days)) {
-    res.status(400).json({ error: 'interval_days must be a positive integer' });
+    res.status(400).json({ error: msg.PARAM_INT_DAYS_POS });
     return;
   }
 
@@ -138,7 +139,7 @@ maintenanceRouter.post('/schedule', async (req, res) => {
         interval_days,
       });
 
-      res.status(201).json({ message: 'Maintenance scheduled successfully' });
+      res.status(201).json({ message: msg.MAINT_SCHED_OK });
       return;
     }
 
@@ -152,10 +153,10 @@ maintenanceRouter.post('/schedule', async (req, res) => {
       interval_days,
     });
 
-    res.json({ message: 'Maintenance scheduled successfully' });
+    res.json({ message: msg.MAINT_SCHED_OK });
   } catch (error) {
-    console.error('Upsert maintenance failed:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(msg.MAINT_UPDATE_FAIL, error);
+    res.status(500).json({ error: msg.SYS_ERR_INTERNAL });
   }
 });
 

@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { ValidUserInput } from '../types/auth';
 
 export class LoginPage {
   readonly page: Page;
@@ -33,10 +34,12 @@ export class LoginPage {
     await this.loginButton.click();
   }
 
-  async login(email: string, password: string): Promise<void> {
+  async login(input: Partial<ValidUserInput>): Promise<void> {
     await this.gotologin();
-    await this.loginEmail.fill(email);
-    await this.loginPassword.fill(password);
+
+    if (input.email !== undefined) await this.loginEmail.fill(input.email);
+    if (input.password !== undefined)
+      await this.loginPassword.fill(input.password);
     await this.loginButton.click();
   }
 

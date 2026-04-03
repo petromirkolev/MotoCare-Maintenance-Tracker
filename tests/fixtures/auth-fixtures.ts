@@ -1,35 +1,42 @@
 import { test as base, expect } from './base-fixtures';
-import { uniqueEmail, validInput } from '../utils/test-data';
+import { invalidInput, uniqueEmail, validInput } from '../utils/test-data';
+import { InvalidUserInput, ValidUserInput } from '../types/auth';
+import { api } from '../utils/api-helpers';
 
 type AuthFixtures = {
-  registeredUser: { email: string; password: string };
-  loggedInUser: { email: string; password: string };
+  validUserInput: ValidUserInput;
+  invalidUserInput: InvalidUserInput;
+  registeredUser: ValidUserInput;
+  loggedInUser: ValidUserInput;
 };
 
 export const test = base.extend<AuthFixtures>({
-  registeredUser: async ({ registerPage, loginPage }, use) => {
-    const user = {
-      email: uniqueEmail('register-test'),
+  validUserInput: async ({}, use) => {
+    await use({
+      email: uniqueEmail(),
       password: validInput.password,
-    };
-
-    await registerPage.register(user.email, user.password, user.password);
-    await expect(loginPage.loginScreen).toBeVisible();
-    await use(user);
+      confirmPassword: validInput.password,
+    });
   },
 
-  loggedInUser: async ({ registerPage, loginPage, garagePage }, use) => {
-    const user = {
-      email: uniqueEmail('login-test'),
-      password: validInput.password,
-    };
-    await registerPage.register(user.email, user.password, user.password);
+  invalidUserInput: async ({}, use) => {
+    await use(invalidInput);
+  },
+
+  registeredUser: async ({ request, validUserInput }, use) => {
+    await api.registerUser(request, { ...validUserInput });
+
+    await use(validUserInput);
+  },
+
+  loggedInUser: async ({ registeredUser, loginPage, garagePage }, use) => {
+    await loginPage.gotologin();
     await expect(loginPage.loginScreen).toBeVisible();
 
-    await loginPage.login(user.email, user.password);
+    await loginPage.login(registeredUser);
     await garagePage.expectGarageVisible();
 
-    await use(user);
+    await use(registeredUser);
   },
 });
 

@@ -1,9 +1,6 @@
 import { test } from '../fixtures/auth-fixtures';
-import {
-  invalidEmailInput,
-  invalidPasswordInput,
-  validInput,
-} from '../utils/test-data';
+import { msg } from '../../constants/constants';
+import { invalidEmailInput, invalidPasswordInput } from '../utils/test-data';
 
 test.describe('Login page test suite', () => {
   test('User can log in with registered credentials', async ({
@@ -11,55 +8,67 @@ test.describe('Login page test suite', () => {
     loginPage,
     garagePage,
   }) => {
-    await loginPage.login(registeredUser.email, registeredUser.password);
-    await loginPage.expectLoginSuccess('Login success, opening garage...');
+    await loginPage.login(registeredUser);
+    await loginPage.expectLoginSuccess(msg.USER_LOG_OK);
     await garagePage.expectGarageVisible();
   });
 
-  test('Login fails with unregistered credentials', async ({ loginPage }) => {
-    await loginPage.login('nonexistingemail@test.com', 'testingpass');
-    await loginPage.expectLoginError('Invalid credentials');
+  test('Login fails with unregistered credentials', async ({
+    loginPage,
+    validUserInput,
+  }) => {
+    await loginPage.login(validUserInput);
+    await loginPage.expectLoginError(msg.CRED_INVALID);
   });
 
-  test('Login with missing email', async ({ loginPage }) => {
-    await loginPage.login('', 'testingpass');
-    await loginPage.expectLoginError('Email is required');
+  test('Login with missing email', async ({ loginPage, validUserInput }) => {
+    await loginPage.login({
+      ...validUserInput,
+      email: undefined,
+    });
+    await loginPage.expectLoginError(msg.EMAIL_REQ);
   });
 
-  test('Login with missing password', async ({ loginPage }) => {
-    await loginPage.login('nonexistingemail@test.com', '');
-    await loginPage.expectLoginError('Password is required');
+  test('Login with missing password', async ({ loginPage, validUserInput }) => {
+    await loginPage.login({ ...validUserInput, password: undefined });
+    await loginPage.expectLoginError(msg.PASS_REQ);
   });
 
-  test.describe('Invalid email', () => {
-    for (const key of Object.keys(invalidEmailInput)) {
-      const { value, testDescription } = invalidEmailInput[key];
+  for (const key of Object.keys(invalidEmailInput) as Array<
+    keyof typeof invalidEmailInput
+  >) {
+    const { value, testDescription } = invalidEmailInput[key];
 
-      test(`Login fails with: ${testDescription}`, async ({ loginPage }) => {
-        await loginPage.login(value, validInput.password);
+    test(`Login fails with: ${testDescription}`, async ({
+      loginPage,
+      validUserInput,
+    }) => {
+      await loginPage.login({ ...validUserInput, email: value });
 
-        if (value === '    ' || value === '') {
-          await loginPage.expectLoginError('Email is required');
-        } else {
-          await loginPage.expectLoginError('Invalid email format');
-        }
-      });
-    }
-  });
+      if (value === '    ' || value === '') {
+        await loginPage.expectLoginError(msg.EMAIL_REQ);
+      } else {
+        await loginPage.expectLoginError(msg.EMAIL_INVALID);
+      }
+    });
+  }
 
-  test.describe('Invalid password', () => {
-    for (const key of Object.keys(invalidPasswordInput)) {
-      const { value, testDescription } = invalidPasswordInput[key];
+  for (const key of Object.keys(invalidPasswordInput) as Array<
+    keyof typeof invalidPasswordInput
+  >) {
+    const { value, testDescription } = invalidPasswordInput[key];
 
-      test(`Login fails with: ${testDescription}`, async ({ loginPage }) => {
-        await loginPage.login('invalidpass@test.com', value);
+    test(`Login fails with: ${testDescription}`, async ({
+      loginPage,
+      validUserInput,
+    }) => {
+      await loginPage.login({ ...validUserInput, password: value });
 
-        if (value === '    ' || value === '') {
-          await loginPage.expectLoginError('Password is required');
-        } else {
-          await loginPage.expectLoginError('Invalid credentials');
-        }
-      });
-    }
-  });
+      if (value === '    ' || value === '') {
+        await loginPage.expectLoginError(msg.PASS_REQ);
+      } else {
+        await loginPage.expectLoginError(msg.CRED_INVALID);
+      }
+    });
+  }
 });

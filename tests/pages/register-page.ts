@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { ValidUserInput } from '../types/auth';
 
 export class RegisterPage {
   readonly page: Page;
@@ -44,15 +45,13 @@ export class RegisterPage {
     await this.registerSubmitButton.click();
   }
 
-  async register(
-    email: string,
-    password: string,
-    confirmPassword: string,
-  ): Promise<void> {
+  async register(input: Partial<ValidUserInput>): Promise<void> {
     await this.gotoreg();
-    await this.fillEmail(email);
-    await this.fillPassword(password);
-    await this.fillConfirmPassword(confirmPassword);
+
+    if (input.email !== undefined) await this.fillEmail(input.email);
+    if (input.password !== undefined) await this.fillPassword(input.password);
+    if (input.confirmPassword !== undefined)
+      await this.fillConfirmPassword(input.confirmPassword);
     await this.submit();
   }
 

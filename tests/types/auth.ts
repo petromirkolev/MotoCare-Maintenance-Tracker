@@ -1,6 +1,7 @@
 export type ValidUserInput = {
   email?: string;
   password?: string;
+  confirmPassword?: string;
 };
 
 export type InvalidUserInput = {
