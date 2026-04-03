@@ -2,8 +2,11 @@ import { Router } from 'express';
 import {
   INTERNAL_SERVER_ERROR,
   INVALID_CREDENTIALS_ERROR,
+  INVALID_EMAIL_FORMAT_ERROR,
   LOGIN_SUCCESS_MESSAGE,
   MISSING_AUTH_FIELDS_ERROR,
+  PASS_LONG_ERROR,
+  PASS_SHORT_ERROR,
   REGISTER_SUCCESS_MESSAGE,
   USER_ALREADY_EXISTS_ERROR,
 } from '../constants/auth';
@@ -32,17 +35,17 @@ authRouter.post('/register', async (req, res) => {
   const password = validatedBody.password;
 
   if (!isValidEmail(email)) {
-    sendAuthError(res, 400, 'Invalid email format');
+    sendAuthError(res, 400, INVALID_EMAIL_FORMAT_ERROR);
     return;
   }
 
   if (password.length < 8) {
-    sendAuthError(res, 400, 'Password must be at least 8 characters');
+    sendAuthError(res, 400, PASS_SHORT_ERROR);
     return;
   }
 
   if (password.length > 32) {
-    sendAuthError(res, 400, 'Password must be 32 characters at most');
+    sendAuthError(res, 400, PASS_LONG_ERROR);
     return;
   }
 
