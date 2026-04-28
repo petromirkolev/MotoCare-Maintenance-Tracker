@@ -1,4 +1,4 @@
-import { AuthBody } from '../types/auth-body';
+import { AuthBody } from '../types/index';
 
 export function getValidatedAuthBody(body: AuthBody): {
   email: string;

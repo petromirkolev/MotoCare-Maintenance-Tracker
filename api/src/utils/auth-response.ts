@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { ErrorResponse } from '../types/auth';
+import { ErrorResponse } from '../types/index';
 
 export function sendAuthError(
   res: Response,

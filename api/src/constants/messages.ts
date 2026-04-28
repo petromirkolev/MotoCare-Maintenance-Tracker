@@ -1,4 +1,4 @@
-export const msg = {
+export const messages = {
   AUTH_REG_OK: 'Registration successful',
   AUTH_REG_FAIL: 'Registration failed:',
   AUTH_LOGIN_OK: 'Login successful',

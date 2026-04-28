@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { getAll, getOne, runQuery } from '../db-helpers';
-import { BikeRow } from '../types/bike';
+import { BikeRow } from '../types/index';
 
 export async function createBike(params: {
   user_id: string;

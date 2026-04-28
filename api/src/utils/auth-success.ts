@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { LoginResponse, RegisterResponse } from '../types/auth';
+import { LoginResponse, RegisterResponse } from '../types/index';
 
 export function sendRegisterSuccess(res: Response, message: string): void {
   const body: RegisterResponse = { message };

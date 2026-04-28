@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { getAll, runQuery } from '../db-helpers';
-import { MaintenanceLogRow } from '../types/maintenance-log';
+import { MaintenanceLogRow } from '../types/index';
 
 export async function listMaintenanceLogsByBikeId(
   bike_id: string,
