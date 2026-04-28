@@ -1,4 +1,4 @@
-import { msg } from '../../constants/constants';
+import { messages } from '../../constants/messages';
 import { test } from '../fixtures/maintenance-fixtures';
 import { makeBike } from '../utils/test-data';
 
@@ -55,7 +55,7 @@ test.describe('MMT - Maintenance log E2E', () => {
 
     await maintenancePage.logMaintenance({ ...logInput, odo: -100 });
 
-    await maintenancePage.expectLogError(msg.BIKE_ODO_POS);
+    await maintenancePage.expectLogError(messages.BIKE_ODO_POS);
   });
 
   test('Page reload preserves maintenance logs', async ({

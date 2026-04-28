@@ -1,5 +1,5 @@
 import { test } from '../fixtures/auth-fixtures';
-import { msg } from '../../constants/constants';
+import { messages } from '../../constants/messages';
 import { invalidEmailInput, invalidPasswordInput } from '../utils/test-data';
 
 test.describe('MMT - Login E2E', () => {
@@ -9,7 +9,7 @@ test.describe('MMT - Login E2E', () => {
     garagePage,
   }) => {
     await loginPage.login(registeredUser);
-    await loginPage.expectLoginSuccess(msg.USER_LOG_OK);
+    await loginPage.expectLoginSuccess(messages.AUTH_LOGIN_OK);
     await garagePage.expectGarageVisible();
   });
 
@@ -18,7 +18,7 @@ test.describe('MMT - Login E2E', () => {
     validUserInput,
   }) => {
     await loginPage.login(validUserInput);
-    await loginPage.expectLoginError(msg.CRED_INVALID);
+    await loginPage.expectLoginError(messages.AUTH_CRED_INVALID);
   });
 
   test('Login with missing email', async ({ loginPage, validUserInput }) => {
@@ -26,12 +26,12 @@ test.describe('MMT - Login E2E', () => {
       ...validUserInput,
       email: undefined,
     });
-    await loginPage.expectLoginError(msg.EMAIL_REQ);
+    await loginPage.expectLoginError(messages.AUTH_EMAIL_REQ);
   });
 
   test('Login with missing password', async ({ loginPage, validUserInput }) => {
     await loginPage.login({ ...validUserInput, password: undefined });
-    await loginPage.expectLoginError(msg.PASS_REQ);
+    await loginPage.expectLoginError(messages.AUTH_PASS_REQ);
   });
 
   for (const key of Object.keys(invalidEmailInput) as Array<
@@ -46,9 +46,9 @@ test.describe('MMT - Login E2E', () => {
       await loginPage.login({ ...validUserInput, email: value });
 
       if (value === '    ' || value === '') {
-        await loginPage.expectLoginError(msg.EMAIL_REQ);
+        await loginPage.expectLoginError(messages.AUTH_EMAIL_REQ);
       } else {
-        await loginPage.expectLoginError(msg.EMAIL_INVALID);
+        await loginPage.expectLoginError(messages.AUTH_EMAIL_INVALID);
       }
     });
   }
@@ -65,9 +65,9 @@ test.describe('MMT - Login E2E', () => {
       await loginPage.login({ ...validUserInput, password: value });
 
       if (value === '    ' || value === '') {
-        await loginPage.expectLoginError(msg.PASS_REQ);
+        await loginPage.expectLoginError(messages.AUTH_PASS_REQ);
       } else {
-        await loginPage.expectLoginError(msg.CRED_INVALID);
+        await loginPage.expectLoginError(messages.AUTH_CRED_INVALID);
       }
     });
   }

@@ -1,4 +1,4 @@
-import { msg } from '../../constants/constants';
+import { messages } from '../../constants/messages';
 import { test, expect } from '../fixtures/garage-fixtures';
 
 test.describe('MMT - Garage edit E2E', () => {
@@ -41,7 +41,7 @@ test.describe('MMT - Garage edit E2E', () => {
       ...garageWithOneBike,
       year: invalidBikeInput.yearBelow,
     });
-    await garagePage.expectEditError(msg.BIKE_YEAR_RANGE);
+    await garagePage.expectEditError(messages.BIKE_YEAR_RANGE);
 
     await garagePage.cancelEditBike();
 
@@ -59,7 +59,7 @@ test.describe('MMT - Garage edit E2E', () => {
       ...garageWithOneBike,
       year: invalidBikeInput.yearAbove,
     });
-    await garagePage.expectEditError(msg.BIKE_YEAR_RANGE);
+    await garagePage.expectEditError(messages.BIKE_YEAR_RANGE);
 
     await garagePage.cancelEditBike();
 
@@ -76,7 +76,7 @@ test.describe('MMT - Garage edit E2E', () => {
       ...garageWithOneBike,
       odo: garageWithOneBike.odo - 100,
     });
-    await garagePage.expectEditError(msg.BIKE_ODO_DECR);
+    await garagePage.expectEditError(messages.BIKE_ODO_DECR);
 
     await garagePage.cancelEditBike();
 
@@ -125,7 +125,7 @@ test.describe('MMT - Garage edit E2E', () => {
     garagePage,
   }) => {
     await garagePage.editBike({ ...garageWithOneBike, make: '' });
-    await garagePage.expectEditError(msg.BIKE_MAKE_REQ);
+    await garagePage.expectEditError(messages.BIKE_MAKE_REQ);
 
     await garagePage.cancelEditBike();
 
@@ -137,7 +137,7 @@ test.describe('MMT - Garage edit E2E', () => {
     garagePage,
   }) => {
     await garagePage.editBike({ ...garageWithOneBike, model: '' });
-    await garagePage.expectEditError(msg.BIKE_MODEL_REQ);
+    await garagePage.expectEditError(messages.BIKE_MODEL_REQ);
 
     await garagePage.cancelEditBike();
 
@@ -149,7 +149,7 @@ test.describe('MMT - Garage edit E2E', () => {
     garagePage,
   }) => {
     await garagePage.editBike({ ...garageWithOneBike, year: Number('') });
-    await garagePage.expectEditError(msg.BIKE_YEAR_REQ);
+    await garagePage.expectEditError(messages.BIKE_YEAR_REQ);
 
     await garagePage.cancelEditBike();
 
@@ -161,7 +161,7 @@ test.describe('MMT - Garage edit E2E', () => {
     garagePage,
   }) => {
     await garagePage.editBike({ ...garageWithOneBike, odo: Number('') });
-    await garagePage.expectEditError(msg.BIKE_ODO_REQ);
+    await garagePage.expectEditError(messages.BIKE_ODO_REQ);
 
     await garagePage.cancelEditBike();
 

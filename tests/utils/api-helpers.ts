@@ -1,7 +1,7 @@
 import { APIRequestContext, APIResponse, expect } from '@playwright/test';
 import { ValidBikeInput, BikeResponse } from '../types/bike';
 import { ValidUserInput } from '../types/auth';
-import { API_BASE_URL } from '../../web/src/api/base';
+import { API_BASE_URL } from './api-config';
 import {
   BikeUpdateInput,
   MaintenanceLogInput,

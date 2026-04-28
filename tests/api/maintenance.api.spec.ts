@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/api-fixtures';
 import { api } from '../utils/api-helpers';
-import { msg } from '../../constants/constants';
+import { messages } from '../../constants/messages';
 import { expectApiError, expectApiSuccess } from '../utils/helpers';
 
 test.describe('MMT API - Maintenance', () => {
@@ -15,7 +15,7 @@ test.describe('MMT API - Maintenance', () => {
       maintenanceLogInput,
     );
 
-    expectApiSuccess(logResponse, 201, 'message', msg.MAINT_CREATE_OK);
+    expectApiSuccess(logResponse, 201, 'message', messages.MAINT_CREATE_OK);
 
     const jobResponse = await api.getMaintenance(
       request,
@@ -49,7 +49,7 @@ test.describe('MMT API - Maintenance', () => {
       },
     );
 
-    expectApiError(logResponse, 400, 'error', msg.BIKE_ODO_POS);
+    expectApiError(logResponse, 400, 'error', messages.BIKE_ODO_POS);
   });
 
   test('Maintenance log for bike A does not affect bike B', async ({
@@ -71,7 +71,7 @@ test.describe('MMT API - Maintenance', () => {
       maintenanceLogInput,
     );
 
-    expectApiSuccess(logResponse, 201, 'message', msg.MAINT_CREATE_OK);
+    expectApiSuccess(logResponse, 201, 'message', messages.MAINT_CREATE_OK);
 
     const bike_1_maintenance = await api.getMaintenance(
       request,
@@ -106,7 +106,7 @@ test.describe('MMT API - Maintenance', () => {
       { ...maintenanceLogInput },
     );
 
-    expectApiSuccess(oilResponse, 201, 'message', msg.MAINT_CREATE_OK);
+    expectApiSuccess(oilResponse, 201, 'message', messages.MAINT_CREATE_OK);
 
     const coolantResponse = await api.logMaintenance(
       request,
@@ -114,7 +114,7 @@ test.describe('MMT API - Maintenance', () => {
       { ...maintenanceLogInput, name: 'coolant-change' },
     );
 
-    expectApiSuccess(coolantResponse, 201, 'message', msg.MAINT_CREATE_OK);
+    expectApiSuccess(coolantResponse, 201, 'message', messages.MAINT_CREATE_OK);
 
     const maintenanceResponse = await api.getMaintenance(
       request,
@@ -154,7 +154,7 @@ test.describe('MMT API - Maintenance', () => {
       { ...maintenanceScheduleInput },
     );
 
-    expectApiSuccess(logResponse, 201, 'message', msg.MAINT_SCHED_OK);
+    expectApiSuccess(logResponse, 201, 'message', messages.MAINT_SCHED_OK);
 
     const getResponse = await api.getMaintenance(
       request,
@@ -186,7 +186,7 @@ test.describe('MMT API - Maintenance', () => {
       { ...maintenanceScheduleInput, interval_days: undefined },
     );
 
-    expectApiError(logResponse, 400, 'error', msg.MAINT_DAYS_REQ);
+    expectApiError(logResponse, 400, 'error', messages.MAINT_DAYS_REQ);
   });
 
   test('Maintenance schedule with missing kilometers returns 400', async ({
@@ -203,7 +203,7 @@ test.describe('MMT API - Maintenance', () => {
       },
     );
 
-    expectApiError(logResponse, 400, 'error', msg.MAINT_KM_REQ);
+    expectApiError(logResponse, 400, 'error', messages.MAINT_KM_REQ);
   });
 
   test('Maintenance schedule for bike A does not affect bike B', async ({
@@ -229,7 +229,7 @@ test.describe('MMT API - Maintenance', () => {
       schedule_oil_service_bike_1,
       201,
       'message',
-      msg.MAINT_SCHED_OK,
+      messages.MAINT_SCHED_OK,
     );
 
     const bike_1_maintenance = await api.getMaintenance(
@@ -255,7 +255,7 @@ test.describe('MMT API - Maintenance', () => {
       schedule_coolant_service_bike_2,
       201,
       'message',
-      msg.MAINT_SCHED_OK,
+      messages.MAINT_SCHED_OK,
     );
 
     const bike_2_maintenance = await api.getMaintenance(request, bike_2_id);

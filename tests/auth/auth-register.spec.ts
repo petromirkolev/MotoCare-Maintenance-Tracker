@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures/auth-fixtures';
-import { msg } from '../../constants/constants';
+import { messages } from '../../constants/messages';
 import { invalidEmailInput, invalidPasswordInput } from '../utils/test-data';
 
 test.describe('MMT - Register E2E', () => {
@@ -8,7 +8,7 @@ test.describe('MMT - Register E2E', () => {
     validUserInput,
   }) => {
     await registerPage.register(validUserInput);
-    await registerPage.expectSuccess(msg.USER_REG_OK);
+    await registerPage.expectSuccess(messages.AUTH_REG_OK);
   });
 
   test('User cannot register with existing credentials', async ({
@@ -16,7 +16,7 @@ test.describe('MMT - Register E2E', () => {
     registerPage,
   }) => {
     await registerPage.register(registeredUser);
-    await registerPage.expectError(msg.USER_EXISTS);
+    await registerPage.expectError(messages.AUTH_USER_EXISTS);
   });
 
   test('User cannot submit empty registration form', async ({
@@ -24,7 +24,7 @@ test.describe('MMT - Register E2E', () => {
   }) => {
     await registerPage.gotoreg();
     await registerPage.submit();
-    await registerPage.expectError(msg.EMAIL_REQ);
+    await registerPage.expectError(messages.AUTH_EMAIL_REQ);
   });
 
   test('User cannot register without email', async ({
@@ -32,7 +32,7 @@ test.describe('MMT - Register E2E', () => {
     validUserInput,
   }) => {
     await registerPage.register({ ...validUserInput, email: undefined });
-    await registerPage.expectError(msg.EMAIL_REQ);
+    await registerPage.expectError(messages.AUTH_EMAIL_REQ);
   });
 
   test('User cannot register without password', async ({
@@ -40,7 +40,7 @@ test.describe('MMT - Register E2E', () => {
     validUserInput,
   }) => {
     await registerPage.register({ ...validUserInput, password: undefined });
-    await registerPage.expectError(msg.PASS_REQ);
+    await registerPage.expectError(messages.AUTH_PASS_REQ);
   });
 
   test('User cannot register without confirm password', async ({
@@ -51,7 +51,7 @@ test.describe('MMT - Register E2E', () => {
       ...validUserInput,
       confirmPassword: undefined,
     });
-    await registerPage.expectError(msg.PASS_CONF_REQ);
+    await registerPage.expectError(messages.AUTH_PASS_CONF_REQ);
   });
 
   test('User cannot register with mismatched passwords', async ({
@@ -63,7 +63,7 @@ test.describe('MMT - Register E2E', () => {
       ...validUserInput,
       confirmPassword: invalidUserInput.password,
     });
-    await registerPage.expectError(msg.PASS_NO_MATCH);
+    await registerPage.expectError(messages.AUTH_PASS_NO_MATCH);
   });
 
   test('Cancel returns user to login page', async ({ registerPage }) => {
@@ -85,9 +85,9 @@ test.describe('MMT - Register E2E', () => {
         await registerPage.register({ ...validUserInput, email: value });
 
         if (value === '    ' || value === '') {
-          await registerPage.expectError(msg.EMAIL_REQ);
+          await registerPage.expectError(messages.AUTH_EMAIL_REQ);
         } else {
-          await registerPage.expectError(msg.EMAIL_INVALID);
+          await registerPage.expectError(messages.AUTH_EMAIL_INVALID);
         }
       });
     }
@@ -105,11 +105,11 @@ test.describe('MMT - Register E2E', () => {
         await registerPage.register({ ...validUserInput, password: value });
 
         if (value === '' || value === '    ') {
-          await registerPage.expectError(msg.PASS_REQ);
+          await registerPage.expectError(messages.AUTH_PASS_REQ);
         } else if (value.length <= 4 && value.trim().length !== 0) {
-          await registerPage.expectError(msg.PASS_SHORT);
+          await registerPage.expectError(messages.AUTH_PASS_SHORT);
         } else if (value.length > 32 && value.trim().length !== 0) {
-          await registerPage.expectError(msg.PASS_LONG);
+          await registerPage.expectError(messages.AUTH_PASS_LONG);
         }
       });
     }

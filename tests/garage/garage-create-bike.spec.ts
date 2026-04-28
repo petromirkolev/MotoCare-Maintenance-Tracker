@@ -1,5 +1,5 @@
 import { test } from '../fixtures/garage-fixtures';
-import { msg } from '../../constants/constants';
+import { messages } from '../../constants/messages';
 
 test.describe('MMT - Garage create E2E', () => {
   test.describe('Valid data', () => {
@@ -18,7 +18,7 @@ test.describe('MMT - Garage create E2E', () => {
       garagePage,
     }) => {
       await garagePage.addBike({ ...validBikeInput, make: undefined });
-      await garagePage.expectError(msg.BIKE_MAKE_REQ);
+      await garagePage.expectError(messages.BIKE_MAKE_REQ);
       await garagePage.expectBikeNotVisible(validBikeInput.make);
     });
 
@@ -31,7 +31,7 @@ test.describe('MMT - Garage create E2E', () => {
         ...validBikeInput,
         model: undefined,
       });
-      await garagePage.expectError(msg.BIKE_MODEL_REQ);
+      await garagePage.expectError(messages.BIKE_MODEL_REQ);
       await garagePage.expectBikeNotVisible(validBikeInput.make);
     });
 
@@ -44,7 +44,7 @@ test.describe('MMT - Garage create E2E', () => {
         ...validBikeInput,
         year: undefined,
       });
-      await garagePage.expectError(msg.BIKE_YEAR_REQ);
+      await garagePage.expectError(messages.BIKE_YEAR_REQ);
       await garagePage.expectBikeNotVisible(validBikeInput.make);
     });
 
@@ -59,7 +59,7 @@ test.describe('MMT - Garage create E2E', () => {
         year: undefined,
         odo: undefined,
       });
-      await garagePage.expectError(msg.BIKE_MAKE_REQ);
+      await garagePage.expectError(messages.BIKE_MAKE_REQ);
       await garagePage.expectBikeNotVisible(validBikeInput.make);
     });
 
@@ -87,7 +87,7 @@ test.describe('MMT - Garage create E2E', () => {
         ...validBikeInput,
         year: invalidBikeInput.yearBelow,
       });
-      await garagePage.expectError(msg.BIKE_YEAR_RANGE);
+      await garagePage.expectError(messages.BIKE_YEAR_RANGE);
       await garagePage.expectBikeNotVisible(validBikeInput.make);
     });
 
@@ -101,7 +101,7 @@ test.describe('MMT - Garage create E2E', () => {
         ...validBikeInput,
         year: invalidBikeInput.yearAbove,
       });
-      await garagePage.expectError(msg.BIKE_YEAR_RANGE);
+      await garagePage.expectError(messages.BIKE_YEAR_RANGE);
       await garagePage.expectBikeNotVisible(validBikeInput.make);
     });
 
@@ -115,7 +115,7 @@ test.describe('MMT - Garage create E2E', () => {
         ...validBikeInput,
         odo: invalidBikeInput.odo,
       });
-      await garagePage.expectError(msg.BIKE_ODO_POS);
+      await garagePage.expectError(messages.BIKE_ODO_POS);
       await garagePage.expectBikeNotVisible(validBikeInput.make);
     });
   });

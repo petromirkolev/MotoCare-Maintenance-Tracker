@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/api-fixtures';
 import { api } from '../utils/api-helpers';
-import { msg } from '../../constants/constants';
+import { messages } from '../../constants/messages';
 import {
   expectApiError,
   expectApiSuccess,
@@ -19,7 +19,7 @@ test.describe('MMT API - Garage', () => {
       validBikeInput,
     );
 
-    expectApiSuccess(response, 201, 'message', msg.BIKE_CREATE_OK);
+    expectApiSuccess(response, 201, 'message', messages.BIKE_CREATE_OK);
   });
 
   test('Create bike with invalid year above maximum returns 400', async ({
@@ -33,7 +33,7 @@ test.describe('MMT API - Garage', () => {
       year: invalidBikeInput.yearAbove,
     });
 
-    expectApiError(response, 400, 'error', msg.BIKE_YEAR_RANGE);
+    expectApiError(response, 400, 'error', messages.BIKE_YEAR_RANGE);
   });
 
   test('Create bike with invalid year below minimum returns 400', async ({
@@ -47,7 +47,7 @@ test.describe('MMT API - Garage', () => {
       year: invalidBikeInput.yearBelow,
     });
 
-    expectApiError(response, 400, 'error', msg.BIKE_YEAR_RANGE);
+    expectApiError(response, 400, 'error', messages.BIKE_YEAR_RANGE);
   });
 
   test('Create bike with negative odometer returns 400', async ({
@@ -61,7 +61,7 @@ test.describe('MMT API - Garage', () => {
       odo: invalidBikeInput.odo,
     });
 
-    expectApiError(response, 400, 'error', msg.BIKE_ODO_POS);
+    expectApiError(response, 400, 'error', messages.BIKE_ODO_POS);
   });
 
   test('Update bike with valid data returns 200', async ({
@@ -76,7 +76,7 @@ test.describe('MMT API - Garage', () => {
       validBikeUpdateInput,
     );
 
-    expectApiSuccess(updateResponse, 200, 'message', msg.BIKE_UPDATE_OK);
+    expectApiSuccess(updateResponse, 200, 'message', messages.BIKE_UPDATE_OK);
 
     const bike = await api.listFirstBike(request, userWithOneBike.user_id);
 
@@ -95,7 +95,7 @@ test.describe('MMT API - Garage', () => {
       { ...validBikeUpdateInput, odo: validBikeUpdateInput.odo - 100 },
     );
 
-    expectApiError(updateResponse, 400, 'error', msg.BIKE_ODO_DECR);
+    expectApiError(updateResponse, 400, 'error', messages.BIKE_ODO_DECR);
   });
 
   test('Delete bike returns 200', async ({ request, userWithOneBike }) => {
@@ -105,7 +105,7 @@ test.describe('MMT API - Garage', () => {
       userWithOneBike.bike_id,
     );
 
-    expectApiSuccess(deleteResponse, 200, 'message', msg.BIKE_DELETE_OK);
+    expectApiSuccess(deleteResponse, 200, 'message', messages.BIKE_DELETE_OK);
 
     const bike = await api.listFirstBike(request, userWithOneBike.user_id);
 

@@ -1,6 +1,6 @@
 import { test } from '../fixtures/api-fixtures';
 import { api } from '../utils/api-helpers';
-import { msg } from '../../constants/constants';
+import { messages } from '../../constants/messages';
 import { expectApiError, expectApiSuccess } from '../utils/helpers';
 
 test.describe('MMT API - Register', () => {
@@ -10,7 +10,7 @@ test.describe('MMT API - Register', () => {
   }) => {
     const response = await api.registerUser(request, validUserInput);
 
-    expectApiSuccess(response, 201, 'message', msg.USER_REG_OK);
+    expectApiSuccess(response, 201, 'message', messages.AUTH_REG_OK);
   });
 
   test('Register with duplicate email returns 409', async ({
@@ -21,7 +21,7 @@ test.describe('MMT API - Register', () => {
 
     const duplicateResponse = await api.registerUser(request, validUserInput);
 
-    expectApiError(duplicateResponse, 409, 'error', msg.USER_EXISTS);
+    expectApiError(duplicateResponse, 409, 'error', messages.AUTH_USER_EXISTS);
   });
 
   test('Register with invalid email returns 400', async ({
@@ -34,7 +34,7 @@ test.describe('MMT API - Register', () => {
       email: invalidUserInput.email,
     });
 
-    expectApiError(response, 400, 'error', msg.EMAIL_INVALID);
+    expectApiError(response, 400, 'error', messages.AUTH_EMAIL_INVALID);
   });
 
   test('Register with missing email returns 400', async ({
@@ -46,7 +46,7 @@ test.describe('MMT API - Register', () => {
       email: undefined,
     });
 
-    expectApiError(response, 400, 'error', msg.EMAIL_PASS_REQ);
+    expectApiError(response, 400, 'error', messages.AUTH_FIELDS_REQ);
   });
 
   test('Register with missing password returns 400', async ({
@@ -58,7 +58,7 @@ test.describe('MMT API - Register', () => {
       password: undefined,
     });
 
-    expectApiError(response, 400, 'error', msg.EMAIL_PASS_REQ);
+    expectApiError(response, 400, 'error', messages.AUTH_FIELDS_REQ);
   });
 
   test('Register with short password returns 400', async ({
@@ -71,7 +71,7 @@ test.describe('MMT API - Register', () => {
       password: invalidUserInput.shortPassword,
     });
 
-    expectApiError(response, 400, 'error', msg.PASS_SHORT);
+    expectApiError(response, 400, 'error', messages.AUTH_PASS_SHORT);
   });
 
   test('Register with long password returns 400', async ({
@@ -84,6 +84,6 @@ test.describe('MMT API - Register', () => {
       password: invalidUserInput.longPassword,
     });
 
-    expectApiError(response, 400, 'error', msg.PASS_LONG);
+    expectApiError(response, 400, 'error', messages.AUTH_PASS_LONG);
   });
 });

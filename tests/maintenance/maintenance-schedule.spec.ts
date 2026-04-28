@@ -1,4 +1,4 @@
-import { msg } from '../../constants/constants';
+import { messages } from '../../constants/messages';
 import { expect, test } from '../fixtures/maintenance-fixtures';
 import { makeBike } from '../utils/test-data';
 
@@ -36,7 +36,7 @@ test.describe('MMT - Maintenance schedule E2E', () => {
       interval_days: Number(''),
     });
 
-    await maintenancePage.expectScheduleError(msg.MAINT_DAYS_POS);
+    await maintenancePage.expectScheduleError(messages.MAINT_DAYS_POS);
   });
 
   test('Maintenance schedule with missing kilometers is rejected', async ({
@@ -51,7 +51,7 @@ test.describe('MMT - Maintenance schedule E2E', () => {
       interval_km: Number(''),
     });
 
-    await maintenancePage.expectScheduleError(msg.MAINT_KM_REQ);
+    await maintenancePage.expectScheduleError(messages.MAINT_KM_REQ);
   });
 
   test('Maintenance schedule with missing days and kilometers is rejected', async ({
@@ -67,7 +67,7 @@ test.describe('MMT - Maintenance schedule E2E', () => {
       interval_km: Number(''),
     });
 
-    await maintenancePage.expectScheduleError(msg.MAINT_KM_REQ);
+    await maintenancePage.expectScheduleError(messages.MAINT_KM_REQ);
   });
 
   test('Maintenance schedule with 0 days is rejected', async ({
@@ -82,7 +82,7 @@ test.describe('MMT - Maintenance schedule E2E', () => {
       interval_days: 0,
     });
 
-    await maintenancePage.expectScheduleError(msg.MAINT_DAYS_POS);
+    await maintenancePage.expectScheduleError(messages.MAINT_DAYS_POS);
   });
 
   test('Maintenance schedule with 0 kilometers is rejected', async ({
@@ -97,7 +97,7 @@ test.describe('MMT - Maintenance schedule E2E', () => {
       interval_km: 0,
     });
 
-    await maintenancePage.expectScheduleError(msg.MAINT_KM_REQ);
+    await maintenancePage.expectScheduleError(messages.MAINT_KM_REQ);
   });
 
   test('Maintenance schedule with negative kilometers is rejected', async ({
@@ -112,7 +112,7 @@ test.describe('MMT - Maintenance schedule E2E', () => {
       interval_km: -100,
     });
 
-    await maintenancePage.expectScheduleError(msg.MAINT_KM_POS);
+    await maintenancePage.expectScheduleError(messages.MAINT_KM_POS);
   });
 
   test('Maintenance schedule with negative days is rejected', async ({
@@ -127,7 +127,7 @@ test.describe('MMT - Maintenance schedule E2E', () => {
       interval_days: -100,
     });
 
-    await maintenancePage.expectScheduleError(msg.MAINT_DAYS_POS);
+    await maintenancePage.expectScheduleError(messages.MAINT_DAYS_POS);
   });
 
   test('Canceling maintenance schedule does not change UI', async ({

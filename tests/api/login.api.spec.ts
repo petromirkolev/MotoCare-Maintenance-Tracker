@@ -1,6 +1,6 @@
 import { test } from '../fixtures/api-fixtures';
 import { api } from '../utils/api-helpers';
-import { msg } from '../../constants/constants';
+import { messages } from '../../constants/messages';
 import { expectApiError, expectApiSuccess } from '../utils/helpers';
 
 test.describe('MMT API - Login', () => {
@@ -10,7 +10,7 @@ test.describe('MMT API - Login', () => {
   }) => {
     const loginResponse = await api.loginUser(request, registeredUser);
 
-    expectApiSuccess(loginResponse, 200, 'message', msg.USER_LOG_OK);
+    expectApiSuccess(loginResponse, 200, 'message', messages.AUTH_LOGIN_OK);
   });
 
   test('Login with wrong password returns 401', async ({
@@ -23,7 +23,7 @@ test.describe('MMT API - Login', () => {
       password: invalidUserInput.password,
     });
 
-    expectApiError(loginResponse, 401, 'error', msg.CRED_INVALID);
+    expectApiError(loginResponse, 401, 'error', messages.AUTH_CRED_INVALID);
   });
 
   test('Login with non existing email returns 401', async ({
@@ -36,7 +36,7 @@ test.describe('MMT API - Login', () => {
       email: invalidUserInput.email,
     });
 
-    expectApiError(loginResponse, 401, 'error', msg.CRED_INVALID);
+    expectApiError(loginResponse, 401, 'error', messages.AUTH_CRED_INVALID);
   });
 
   test('Login with missing email returns 400', async ({
@@ -48,7 +48,7 @@ test.describe('MMT API - Login', () => {
       email: undefined,
     });
 
-    expectApiError(loginResponse, 400, 'error', msg.EMAIL_PASS_REQ);
+    expectApiError(loginResponse, 400, 'error', messages.AUTH_FIELDS_REQ);
   });
 
   test('Login with missing password returns 400', async ({
@@ -60,6 +60,6 @@ test.describe('MMT API - Login', () => {
       password: undefined,
     });
 
-    expectApiError(loginResponse, 400, 'error', msg.EMAIL_PASS_REQ);
+    expectApiError(loginResponse, 400, 'error', messages.AUTH_FIELDS_REQ);
   });
 });
